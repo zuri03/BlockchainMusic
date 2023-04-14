@@ -1,0 +1,18 @@
+General Idea:
+Blockchain spotify
+    - store hashes of music files in a smart contract
+    - ensure that users must tip artists before getting data for a song
+    - have an offchain service for allowing an artist to create a new account 
+        - with each new account a new contract is deployed to the network with all of the artists songs and funds
+    - just a hobby project so security will not be strict
+
+architecture:
+    - multiple individual services (probably microservices pattern)
+        - blockchain service
+            - contains contracts 
+        - user managemnet service
+            - maintains user accounts
+            - deploys new contracts
+        - authenticaiton service
+        - frontend/UI
+            - web app written in react and typescript
