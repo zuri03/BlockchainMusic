@@ -1,0 +1,22 @@
+{
+  "name": "blockchainmusic",
+  "version": "1.0.0",
+  "description": "A blockchain music service",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zuri03/BlockchainMusic.git"
+  },
+  "author": "shawzuri1027@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zuri03/BlockchainMusic/issues"
+  },
+  "homepage": "https://github.com/zuri03/BlockchainMusic#readme"
+}
