@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016", 
     "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": "src", 
+    "rootDir": "packages", 
     "outDir": "build", 
     "esModuleInterop": true,   
     "forceConsistentCasingInFileNames": true,
@@ -10,8 +10,6 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    //"src/**/*", 
-    "src/**/*", 
-    "tests/**/*", 
+    "**/*"
   ]
 }
