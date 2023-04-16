@@ -6,10 +6,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "run": "npm run build && npm run start",
     "start": "node ./build/index.js",
     "docker-build": "docker build -t static-file-server --file Dockerfile .",
     "docker-remove": "docker rmi --force static-file-server",
-    "docker-start": "docker run -p8000:8000 -d static-file-server"
+    "docker-start": "docker run -p8000:8000 static-file-server"
   },
   "dependencies": {
     "@types/express": "^4.17.17",

@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
         "target": "es2016", 
-        "module": "commonjs",                                /* Specify what module code is generated. */
+        //"module": "commonjs",   
+        "module": "ES6",
         "rootDir": ".", 
         "outDir": "./build", 
         "esModuleInterop": true,   
         "forceConsistentCasingInFileNames": true,
-        "strict": true,                              /* Skip type checking .d.ts files that are included with TypeScript. */
-        "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+        "strict": true,                   
+        "skipLibCheck": true  
       },
     
     "files": [
