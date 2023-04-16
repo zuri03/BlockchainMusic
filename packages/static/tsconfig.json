@@ -1,6 +1,16 @@
 {
-    "extends": "../../tsconfig.json",
-    "include": [
+    "compilerOptions": {
+        "target": "es2016", 
+        "module": "commonjs",                                /* Specify what module code is generated. */
+        "rootDir": ".", 
+        "outDir": "./build", 
+        "esModuleInterop": true,   
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,                              /* Skip type checking .d.ts files that are included with TypeScript. */
+        "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+      },
+    
+    "files": [
         "index.ts" 
     ]
 }
