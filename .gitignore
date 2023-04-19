@@ -1,4 +1,9 @@
+#env file
 .env
+
+#build and output directories
 dist/
-node_modules
 build/
+
+#dependencies
+node_modules

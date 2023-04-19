@@ -18,7 +18,9 @@ architecture:
             - web app written in react and typescript
 
 todo:
-    static file server:
+    determine whether to use react or static file sever
+    
+    static file server: 
         finish web pages:
             user page:
                 create user signup form
