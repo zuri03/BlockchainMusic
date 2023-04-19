@@ -27,8 +27,9 @@ RUN  npm install
 #copy the build folder from the last stage
 COPY --from=build /usr/src/app/build ./build
 
+#copy public folder
+COPY public ./public
+
 #expose the proper port and start
 EXPOSE 8000
 CMD npm start
-
-
