@@ -1,12 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes
+} from "react-router-dom";
 import './App.css';
-import AppHeader from './components/appHeader';
+import Profile from './pages/profile';
 
 function App() {
   return (
     <div className="App">
-      <AppHeader />
+      <Router>
+        <Routes>
+            <Route path="/Profile" element={<Profile/>}/>
+        </Routes>
+      </Router>
     </div>
   )
   /*
