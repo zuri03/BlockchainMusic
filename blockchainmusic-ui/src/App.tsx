@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import './App.css';
 import Profile from './pages/profile';
+import Browse from './pages/browse';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
             <Route path="/Profile" element={<Profile/>}/>
+            <Route path="/Browse" element={<Browse />}/>
         </Routes>
       </Router>
     </div>

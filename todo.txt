@@ -25,6 +25,7 @@ todo:
             user page:
                 create user signup form
                 set up signed in user page
+                looking into using redux and JWT to handle login and state
             browse music page:
                 set up search bar 
                 set up a grid of music that is available for download
