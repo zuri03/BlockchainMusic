@@ -1,5 +1,13 @@
-console.log('music-service')
+import express from 'express'
+import router from './routes/music-routes.js';
 
+//temp port
+const PORT = 8888;
+const app : express.Application = express();
+
+app.use('/api/', router);
+
+app.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
 
 /*
 GET: /Song: Gets info on all music available (will need pagination),

@@ -1,5 +1,5 @@
 //For now the db will remain as internal memory until an external db is added
-type Song = {
+export type Song = {
     id: string,
     title: string,
     author: string,
@@ -8,7 +8,7 @@ type Song = {
     createdAt: string 
 }
 
-export default class SongRepository {
+export class SongRepository {
 
     private songs: Song[];
 
@@ -48,6 +48,10 @@ export default class SongRepository {
         return this.songs.find(song => song['id'] === id);
     }
 
+    public searchSong(searchTerm: string) : Song[] {
+        return this.songs.filter(song => song['title'].includes(searchTerm) || song['author'].includes(searchTerm));
+    }
+
     public AddSong(newSong : Song): void {
         this.songs.push(newSong);
     }
@@ -62,5 +66,4 @@ export default class SongRepository {
 
         this.songs = this.songs.splice(deletedElementIndex, 1);
     }
-
 } 
