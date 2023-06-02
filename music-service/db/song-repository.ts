@@ -64,6 +64,6 @@ export class SongRepository {
             throw new Error(`No song with id ${id} found`);
         }
 
-        this.songs = this.songs.splice(deletedElementIndex, 1);
+        this.songs.splice(deletedElementIndex, 1);
     }
 } 
