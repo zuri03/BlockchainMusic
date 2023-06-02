@@ -4,7 +4,7 @@ export type Song = {
     title: string,
     author: string,
     authorId: string,
-    description: string,
+    description: string | undefined,
     createdAt: string 
 }
 

@@ -1,11 +1,20 @@
 import express from 'express'
+import bodyParser from 'body-parser';
 import router from './routes/music-routes.js';
+import CustomErrorHandler from './middleware/middleware.js';
 
 //temp port
 const PORT = 8888;
 const app : express.Application = express();
 
+//allow the api to parse json bodies for post requests
+app.use(bodyParser.json());
+
+//set up the music router
 app.use('/api/', router);
+
+//Error handler middleware function
+app.use(CustomErrorHandler);
 
 app.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
 

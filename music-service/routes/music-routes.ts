@@ -39,6 +39,47 @@ router.get('/Song/Search/:searchTerm', (request: express.Request, response: expr
     response.json(results)
 });
 
+type SongRequest = {
+  title: string,
+  author: string,
+  authorId: string,
+  description: string | undefined,
+}
+
+router.post('/Song', (request: express.Request, response: express.Response, next: express.NextFunction) => {
+    try{
+      const {
+        title,
+        author,
+        authorId,
+        description
+      } = request.body;
+
+      if (!title || !author || !authorId) {
+        const responseBody = { 
+          'error': `one or more required values missing from request body, title: ${title}, author: ${author}, authorId: ${authorId}` 
+        }
+        response.status(400).json(responseBody)
+      }
+
+      const newSong: Song = {
+        id: 'placeholder',
+        title: title,
+        author: author,
+        authorId: authorId,
+        description: description,
+        createdAt: new Date().toDateString()
+      }
+      
+      repository.AddSong(newSong);
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+    
+    response.status(200).end();
+});
+
 export default router;
 /*
 GET: /Song: Gets info on all music available (will need pagination),
