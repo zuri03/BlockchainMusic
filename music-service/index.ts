@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser';
-import router from './routes/music-routes.js';
+import router from './routes/song-routes';
 import CustomErrorHandler from './middleware/middleware.js';
 
 //temp port
@@ -11,7 +11,7 @@ const app : express.Application = express();
 app.use(bodyParser.json());
 
 //set up the music router
-app.use('/api/', router);
+app.use('/api/Song', router);
 
 //Error handler middleware function
 app.use(CustomErrorHandler);
@@ -37,14 +37,6 @@ The author routes may not be necessary
 GET: /Author: Gets informaiton on all authors
 GET: /Author/<id>: Gets information on a specific artist
 GET: /Author/Search/<searchTerm>: Gets info on all artists that match a search term
-DELETE: /Author/<id>: Deletes a specific artist
-POST: /Author
-{
-    'id': <id> //id of the user
-    'name': string //username of the author
-    'songs': [<ids>] // array of ids of songs uploaded by the artists
-}
-
 GET: /Cover/<id>: Gets a song's cover image 
 
 User: (not all users are authors but all authors are users)

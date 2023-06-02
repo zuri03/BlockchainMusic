@@ -39,17 +39,36 @@ export class SongRepository {
         }];
     }
 
-    public GetAllSongs() : Song[] {
+    public getAllSongs() : Song[] {
         return this.songs;
     } 
 
-    public GetSong(id: number | string) : Song | undefined {
+    public getAllAuthors(): object[] {
+        return this.songs.map<object>(song => { 
+            return {  'author': song['author'], 'authorId': song['authorId'] }
+        });
+    }
+
+    public getSong(id: number | string) : Song | undefined {
         id = id.toString();
         return this.songs.find(song => song['id'] === id);
     }
 
+    public getAuthor(id: number | string) : Song | undefined {
+        id = id.toString();
+        return this.songs.find(song => song['authorId'] === id);
+    }
+
     public searchSong(searchTerm: string) : Song[] {
         return this.songs.filter(song => song['title'].includes(searchTerm) || song['author'].includes(searchTerm));
+    }
+
+    public searchAuthors(searchTerm: string): object[] {
+        return this.songs
+            .filter(song => song['author'].includes(searchTerm))
+            .map<object>(song => { 
+                return {  'author': song['author'], 'authorId': song['authorId'] }
+            });
     }
 
     public AddSong(newSong : Song): void {

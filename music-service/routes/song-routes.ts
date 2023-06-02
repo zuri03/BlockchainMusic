@@ -8,12 +8,12 @@ const repository: SongRepository = new SongRepository();
 
 const router: express.Router = express.Router();
 
-router.get('/Song', (request, response, next) => {
-    const songs: Song[] = repository.GetAllSongs();
+router.get('/', (request, response, next) => {
+    const songs: Song[] = repository.getAllSongs();
     response.json(songs);
 });
 
-router.get('/Song/:id', (request, response, next) => {
+router.get('/:id', (request, response, next) => {
     const id: string | undefined = request.params.id;
 
     if (!id) {
@@ -21,7 +21,7 @@ router.get('/Song/:id', (request, response, next) => {
         response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'}) 
     }
 
-    const song: Song | undefined = repository.GetSong(id);
+    const song: Song | undefined = repository.getSong(id);
 
     if (!song) {
         //not found
@@ -31,7 +31,7 @@ router.get('/Song/:id', (request, response, next) => {
     response.json(song);
 });
 
-router.get('/Song/Search/:searchTerm', (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.get('/Search/:searchTerm', (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const searchTerm: string | undefined = request.params.searchTerm
 
     const results : Song[] = repository.searchSong(searchTerm);
@@ -46,7 +46,7 @@ type SongRequest = {
   description: string | undefined,
 }
 
-router.post('/Song', (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.post('/', (request: express.Request, response: express.Response, next: express.NextFunction) => {
     try{
       const {
         title,
@@ -80,7 +80,7 @@ router.post('/Song', (request: express.Request, response: express.Response, next
     response.status(200).end();
 });
 
-router.delete("/Song/:id", (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.delete("/:id", (request: express.Request, response: express.Response, next: express.NextFunction) => {
   const id: string = request.params.id;
 
   try{
