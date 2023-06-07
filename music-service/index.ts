@@ -4,8 +4,7 @@ import songRouter from './routes/song-routes.js';
 import authorRouter from './routes/song-routes.js'
 import cors from 'cors';
 import {
-    CustomErrorHandler,
-    SetAccessControlHeaders
+    CustomErrorHandler
 } from './middleware/middleware.js';
 
 //temp port
@@ -18,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use((request, response, next) => {
-    console.log(`INFO: URL: ${request.url}`);
+    console.log(`INFO: ${request.method}: URL: ${request.url}`);
     next();
 })
 //set up the music router

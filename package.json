@@ -2,7 +2,6 @@
   "name": "blockchainmusic",
   "version": "1.0.0",
   "description": "A blockchain music service",
-  "main": "truffle-config.js",
   "directories": {
     "test": "test"
   },
