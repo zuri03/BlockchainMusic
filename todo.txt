@@ -18,8 +18,12 @@ architecture:
             - web app written in react and typescript
 
 todo:
-    determine whether to use react or static file sever
-    
+    music-service:
+        improve customer error CustomErrorHandler
+        add external db 
+        add a input handling/cleaning library
+        add dockerfile to music service
+
     static file server: 
         finish web pages:
             user page:
@@ -27,15 +31,11 @@ todo:
                 set up signed in user page
                 looking into using redux and JWT to handle login and state
             browse music page:
-                set up search bar 
-                set up a grid of music that is available for download
-            music page:
-                set up page display details about a single snippet of music
+                set up donwload function for each song
+                
         create front end javascript files:
             user.js:
                 need a way to keep a user signed in after they sign in
-            music.js:
-            browse.js:
     
     user service:
         set up skeleton of user service:
