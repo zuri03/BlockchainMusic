@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useReducer } from 'react';
+//import { useFetch } from 'react-async';
 import AppHeader from '../components/appHeader';
 import Snippet from '../components/snippet';
 
@@ -9,82 +10,143 @@ type Song = {
     desciption: string
 }
 
-export default function Browse() : JSX.Element {
+const SongList = ({ searchTerm } : { searchTerm? : string }) : JSX.Element => {
 
-    let initialState : Song[] = [{
-        title: 'title',
-        author: 'author',
-        createdAt: 'createdAt',
-        desciption: 'description'
-    },
-    {
-        title: 'title',
-        author: 'author',
-        createdAt: 'createdAt',
-        desciption: 'description'
-    },
-    {
-        title: 'title',
-        author: 'author',
-        createdAt: 'createdAt',
-        desciption: 'description'
-    }];
+    /*
+    const { data, error } = useFetch<Song[]>(`http://localhost:8888/api/Song`, {
+        method: 'GET',
+        headers: { accept: "application/json" },
+    });
 
-    const [ music, setMusic ] : [ Song[], React.Dispatch<React.SetStateAction<Song[]>> ]= useState(initialState)
+    */
+   let initialState : Song[] = [];
+   const [loading, setLoading] = useState(true);
 
-    const GetMusic = async function (searchTerm : string | undefined | null) : Promise<void> {
+   const [ songList, setSongList ] : [ Song[], React.Dispatch<React.SetStateAction<Song[]>>] = useState(initialState);
 
-        const url = searchTerm ? `http://localhost:5000/Music/Search/${searchTerm}` : `http://localhost:5000/Music`
-        
-        const resposne : Response = await fetch(url)
+   const getSongList =  function (searchTerm? : string) : void {
 
-        if (!resposne.ok) {
-            //flash alert
-            return;
-        }
+        setLoading(true);
 
-        const music : Song[] = JSON.parse(await resposne.json())
+        //alert(searchTerm)
 
-        setMusic(music)
+        const url = searchTerm !== '' && searchTerm ? `http://localhost:8888/api/Song/Search/${searchTerm}` : `http://localhost:8888/api/Song`
+
+        //alert(url)
+
+        fetch(url)
+            .then(response => {
+                console.log(response)
+                setLoading(false)
+                return response.json()
+            })
+            .then(json => {
+                setSongList(json)
+            })
+            .catch(err => {
+                console.log(err)
+            });
     }
 
-    const submitSearch = function (event : any) : void {
-        event.preventDefault();
-        const searchTerm = event.target[0].value;
-        GetMusic(searchTerm)
+    useEffect(() => {
+        //alert('use effect')
+        getSongList();
+    }, [])
+
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (songList.length === 0) {
+        return <div>No Results</div>;
     }
 
     let musicList : Song[][] = [];
-    for (let i = 0; i < music.length; i += 2) {
-        let songRow = [ music[i] ]
+    for (let i = 0; i < songList.length; i += 2) {
+        let songRow = [ songList[i] ]
 
-        if (i + 1 < music.length) {
-            songRow.push(music[i + 1])
+        if (i + 1 < songList.length) {
+            songRow.push(songList[i + 1])
         }   
 
         musicList.push(songRow)
     }
 
+    return( 
+        <div>
+            {musicList.map(songRow => {
+                let [ firstSong, secondSong ] = songRow;
+                //This NEEDS to be fixed
+                return (
+                    <div className='row'>
+                        <div className='col-6 my-2'>
+                            <Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/>
+                        </div>
+                        {secondSong ? 
+                        <div className='col-6 my-2'>
+                            <Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/>
+                        </div> : <div></div>} 
+                    </div>
+                )
+            })}
+        </div>
+    );
+}
+export default function Browse() : JSX.Element {
+
+    let initialState : Song[] = [];
+    const [ searchTerm, setSearchTerm ] : [ string, React.Dispatch<React.SetStateAction<string>>] = useState('');
+    const [ songList, setSongList ] : [ Song[], React.Dispatch<React.SetStateAction<Song[]>>] = useState(initialState);
+
+    const submitSearch = function (event : any) : void {
+        event.preventDefault();
+        const searchTerm = event.target[0].value;
+        setSearchTerm(searchTerm);
+    }
+
+    const getSongList =  function (searchTerm? : string) : void {
+
+       // setLoading(true);
+
+        //alert(searchTerm)
+
+        const url = searchTerm !== '' && searchTerm ? `http://localhost:8888/api/Song/Search/${searchTerm}` : `http://localhost:8888/api/Song`
+
+        //alert(url)
+
+        fetch(url)
+            .then(response => {
+                console.log(response)
+                //setLoading(false)
+                return response.json()
+            })
+            .then(json => {
+                setSongList(json)
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }
+
+    useEffect(() => {
+        //alert('use effect')
+        getSongList();
+    }, [])
+
     const isSignedIn = false;
 
-    let musicElement : JSX.Element[];
+    let musicList : Song[][] = [];
+    for (let i = 0; i < songList.length; i += 2) {
+        let songRow = [ songList[i] ]
 
-    if (music.length === 0) {
-        musicElement = [ <div>No Results</div> ];
-    } else {
-        musicElement = musicList.map(songRow => {
-            let [ firstSong, secondSong ] = songRow;
-            //This NEEDS to be fixed
-            return (
-                <div className='row'>
-                    <div className='col-6 my-2'>
-                        <Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/>
-                    </div>
-                    {secondSong ? <div className='col-6 my-2'><Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/></div> : <div></div>} 
-                </div>
-            )
-        })
+        if (i + 1 < songList.length) {
+            songRow.push(songList[i + 1])
+        }   
+
+        musicList.push(songRow)
     }
+
 
     return (
         <div>
@@ -96,7 +158,23 @@ export default function Browse() : JSX.Element {
                     <button className="btn btn-outline-success" type="submit">Search</button>
                 </form>
                 </div>
-                {musicElement}
+                <div>
+            {musicList.map(songRow => {
+                let [ firstSong, secondSong ] = songRow;
+                //This NEEDS to be fixed
+                return (
+                    <div className='row'>
+                        <div className='col-6 my-2'>
+                            <Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/>
+                        </div>
+                        {secondSong ? 
+                        <div className='col-6 my-2'>
+                            <Snippet title={firstSong.title} author={firstSong.author} description={firstSong.desciption}/>
+                        </div> : <div></div>} 
+                    </div>
+                )
+            })}
+        </div>
             </div>
         </div>
     )

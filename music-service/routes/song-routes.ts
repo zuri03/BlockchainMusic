@@ -39,13 +39,6 @@ router.get('/Search/:searchTerm', (request: express.Request, response: express.R
     response.json(results)
 });
 
-type SongRequest = {
-  title: string,
-  author: string,
-  authorId: string,
-  description: string | undefined,
-}
-
 router.post('/', (request: express.Request, response: express.Response, next: express.NextFunction) => {
     try{
       const {
