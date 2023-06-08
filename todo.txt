@@ -55,6 +55,7 @@ todo:
     music service:
         uncaught errors causes express to return html file with 500 error 
         add song-cover routes
+        add tests
     
     blockchain service:
         set up contract to hold snippts by a single artists

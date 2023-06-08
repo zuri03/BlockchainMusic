@@ -30,4 +30,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#example cover for testing
 example-cover.png
+example-cover*.png
+
+#docker ignore
+.dockerignore
