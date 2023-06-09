@@ -4,7 +4,6 @@ Blockchain spotify
     - ensure that users must tip artists before getting data for a song
     - have an offchain service for allowing an artist to create a new account 
         - with each new account a new contract is deployed to the network with all of the artists songs and funds
-    - just a hobby project so security will not be strict
 
 architecture:
     - multiple individual services (probably microservices pattern)
@@ -15,51 +14,33 @@ architecture:
             - deploys new contracts
         - authenticaiton service
         - frontend/UI
-            - web app written in react and typescript
-
+            - static file server to server html files
 todo:
     setup docker-compose 
 
     music-service:
         add external db 
         add a input handling/cleaning library
-        set up graceful shutdown (in progress)
+        add song-cover routes (add external db first)
 
     static file server: 
+        improve the look of each page and the site theme
         finish web pages:
-            add-song page;
-                use a form to allow users to add new songs to the user service
-                    form values:
-                        title (required)
-                        author (required)  (hidden) (username)
-                        authorid (required) (hidden) (userId)
-                        description 
-                        cover 
-                        song file (required)
-
             user page:
                 create user signup form
                 set up signed in user page
                 looking into using redux and JWT to handle login and state
             browse music page:
                 set up donwload function for each song
-
-        create front end javascript files:
-            user.js:
-                need a way to keep a user signed in after they sign in
+            
+            song page:
+                improve the look of the song form
     
     user service:
         set up skeleton of user service:
-
-    music service:
-        uncaught errors causes express to return html file with 500 error 
-        add song-cover routes
-        add tests
     
     blockchain service:
         set up contract to hold snippts by a single artists
         set up skeleton of offchain part of this service
         add tests to blockchain-service
         create dockerfile for offchain part of blockchain service
-    
-    create docker-compose file to deploy entire system

@@ -1,3 +1,4 @@
+const tenSecondDelay = 10000;
 $('#song-form').submit(function (event) {
     event.preventDefault();
 
@@ -22,10 +23,13 @@ $('#song-form').submit(function (event) {
         data: JSON.stringify(requestObj),
         contentType: "application/json; charset=utf-8",
         success: function () {
-            window.location.reload();
+            $('#song-form')[0].reset();
+            $('#success-alert').show();
+            setTimeout(() => $('#success-alert').hide(), tenSecondDelay);
         },
         error: function (xhr, textStatus, errorThrown) {
-            alert('Server error has occured');
+            $('#error-alert').show();
+            setTimeout(() => $('#error-alert').hide(), tenSecondDelay);
             console.log({ xhr, textStatus, errorThrown })
         }
     });

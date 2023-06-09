@@ -28,7 +28,7 @@ const renderSongs = function (data) {
                     <div class="card-body">
                         <h5 class="card-title text-start"><b>${firstSong['author']}</b>: ${firstSong['title']}</h5>
                         <p class="card-text text-start">${firstSong['description'] || ''}</p>
-                        <a href="#" class="btn btn-success">Download</a>
+                        <a href="#" class="btn app-btn">Download</a>
                     </div>
                 </div>
             </div>`
@@ -41,7 +41,7 @@ const renderSongs = function (data) {
                         <div class="card-body">
                             <h5 class="card-title text-start"><b>${secondSong['author']}</b>: ${secondSong['title']}</h5>
                             <p class="card-text text-start">${secondSong['description'] || ''}</p>
-                            <a href="#" class="btn btn-success">Download</a>
+                            <a href="#" class="btn app-btn">Download</a>
                         </div>
                     </div>
                 </div>`
@@ -68,7 +68,7 @@ const LoadSongs = function () {
         beforeSend: () => $('#song-loading').show(),
         success: function (result) {
             $('#song-loading').hide();
-            renderSongs(result);
+            renderSongs(result['data']);
             console.log({ result })
         },
         error: function (xhr, textStatus, errorThrown) {
