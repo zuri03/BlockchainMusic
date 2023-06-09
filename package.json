@@ -1,20 +1,24 @@
 {
   "name": "blockchainmusic",
   "version": "1.0.0",
-  "description": "A blockchain music service",
-  "directories": {
-    "test": "test"
-  },
+  "description": "",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zuri03/BlockchainMusic.git"
+    "type": "git"
   },
-  "author": "shawzuri1027@gmail.com",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zuri03/BlockchainMusic/issues"
   },
-  "homepage": "https://github.com/zuri03/BlockchainMusic#readme"
+  "homepage": "https://github.com/zuri03/BlockchainMusic#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "@types/supertest": "^2.0.12",
+    "supertest": "^6.3.3"
+  }
 }

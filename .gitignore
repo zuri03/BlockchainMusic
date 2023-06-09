@@ -36,3 +36,7 @@ example-cover*.png
 
 #docker ignore
 .dockerignore
+
+#jest
+jest.config.js
+coverage

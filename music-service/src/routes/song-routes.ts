@@ -2,7 +2,7 @@ import express from 'express';
 import { 
     Song,
     SongRepository 
-} from '../db/song-repository.js';
+} from '../db/song-repository';
 
 const repository: SongRepository = new SongRepository();
 
@@ -10,7 +10,7 @@ const router: express.Router = express.Router();
 
 router.get('/', (request, response, next) => {
     const songs: Song[] = repository.getAllSongs();
-    response.json(songs);
+    response.json({ 'data': songs });
 });
 
 router.get('/:id', (request, response, next) => {
@@ -18,17 +18,19 @@ router.get('/:id', (request, response, next) => {
 
     if (!id) {
         //bad request
-        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'}) 
+        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+        return; 
     }
 
     const song: Song | undefined = repository.getSong(id);
 
     if (!song) {
         //not found
-        response.status(404).json({ 'error': `Song with id ${id} not found` })
+        response.status(404).json({ 'error': `Song with id ${id} not found` });
+        return;
     }
 
-    response.json(song);
+    response.json({ 'data': song });
 });
 
 router.get('/Search/:searchTerm', (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -36,7 +38,7 @@ router.get('/Search/:searchTerm', (request: express.Request, response: express.R
 
     const results : Song[] = repository.searchSong(searchTerm);
 
-    response.json(results)
+    response.json({ 'data': results })
 });
 
 router.post('/', (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -66,7 +68,6 @@ router.post('/', (request: express.Request, response: express.Response, next: ex
       
       repository.AddSong(newSong);
     } catch (error) {
-      console.log(error)
       next(error)
     }
     
@@ -76,14 +77,18 @@ router.post('/', (request: express.Request, response: express.Response, next: ex
 router.delete("/:id", (request: express.Request, response: express.Response, next: express.NextFunction) => {
   const id: string = request.params.id;
 
-  try{
-    repository.DeleteSong(id);
-  } catch (error) {
-    const responseBody = { 'error' : `Song with id ${id} not found` };
-    response.status(400).json(responseBody)
-  }
+  try {
+    const deletedSong : Song | undefined = repository.DeleteSong(id);
 
-  response.status(200).end();
+    if (!deletedSong) {
+      response.status(400).json({ 'error': `song with id ${id} not found`});
+      return;
+    }
+
+    response.status(200).json({ 'data': deletedSong });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

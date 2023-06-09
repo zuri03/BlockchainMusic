@@ -1,7 +1,7 @@
 import express from 'express';
 import { 
     SongRepository 
-} from '../db/song-repository.js';
+} from '../db/song-repository';
 
 const repository: SongRepository = new SongRepository();
 
@@ -9,7 +9,7 @@ const router: express.Router = express.Router();
 
 router.get('/Author', (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const authors = repository.getAllAuthors();
-    response.json(authors);
+    response.json({ 'data': authors });
 });
 
 router.get('/Author/:id', (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -17,17 +17,19 @@ router.get('/Author/:id', (request: express.Request, response: express.Response,
 
     if (!id) {
         //bad request
-        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'}) 
+        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+        return; 
     }
 
     const author = repository.getAuthor(id);
 
     if (!author) {
         //not found
-        response.status(404).json({ 'error': `Author with id ${id} not found` })
+        response.status(404).json({ 'error': `Author with id ${id} not found` });
+        return;
     }
 
-    response.json(author);
+    response.json({ 'data': author });
 });
 
 router.get('/Author/Search/:searchTerm', (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -35,7 +37,7 @@ router.get('/Author/Search/:searchTerm', (request: express.Request, response: ex
 
     const results = repository.searchSong(searchTerm);
 
-    response.json(results)
+    response.json({ 'data': results })
 });
 
 export default router;

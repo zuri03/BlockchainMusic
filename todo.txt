@@ -24,7 +24,7 @@ todo:
         improve customer error CustomErrorHandler
         add external db 
         add a input handling/cleaning library
-        add dockerfile to music service
+        set up graceful shutdown
 
     static file server: 
         finish web pages:

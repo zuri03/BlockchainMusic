@@ -15,25 +15,25 @@ export class SongRepository {
     public constructor() {
         this.songs =  [{
             id: '1',
-            title: 'title',
+            title: 'title1',
             authorId: 'authorId',
-            author: 'author',
+            author: 'author1',
             createdAt: 'createdAt',
             description: 'description'
         },
         {
             id: '2',
-            title: 'title',
+            title: 'title2',
             authorId: 'authorId',
-            author: 'author',
+            author: 'author2',
             createdAt: 'createdAt',
             description: 'description'
         },
         {
             id: '3',
-            title: 'title',
+            title: 'title3',
             authorId: 'authorId',
-            author: 'author',
+            author: 'author3',
             createdAt: 'createdAt',
             description: 'description'
         }];
@@ -75,14 +75,18 @@ export class SongRepository {
         this.songs.push(newSong);
     }
 
-    public DeleteSong(id: number | string) : void {
+    public DeleteSong(id: number | string) : Song | undefined {
         id = id.toString();
         const deletedElementIndex = this.songs.findIndex(song => song['id'] === id);
 
+        let deletedSong: Song | undefined;
         if (deletedElementIndex === -1) {
-            throw new Error(`No song with id ${id} found`);
+            return deletedSong;
         }
 
-        this.songs.splice(deletedElementIndex, 1);
+        //at this point we have a garuantee one song will be deleted
+        deletedSong = this.songs.splice(deletedElementIndex, 1)[0];
+
+        return deletedSong;
     }
 } 

@@ -1,35 +1,10 @@
-import express from 'express'
-import bodyParser from 'body-parser';
-import songRouter from './routes/song-routes.js';
-import authorRouter from './routes/song-routes.js'
-import cors from 'cors';
 import {
-    CustomErrorHandler
-} from './middleware/middleware.js';
+    setUp,
+    start
+} from './src/app.js';
 
-//temp port
-const PORT = 8888;
-const app : express.Application = express();
-
-//allow the api to parse json bodies for post requests
-app.use(bodyParser.json());
-
-app.use(cors());
-
-app.use((request, response, next) => {
-    console.log(`INFO: ${request.method}: URL: ${request.url}`);
-    next();
-})
-//set up the music router
-app.use('/api/Song', songRouter);
-
-//set up the author router
-app.use('/api/Author', authorRouter)
-
-//Error handler middleware function
-app.use(CustomErrorHandler);
-
-app.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
+const app = setUp();
+start(app);
 
 /*
 GET: /Song: Gets info on all music available (will need pagination),
