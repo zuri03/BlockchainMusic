@@ -21,10 +21,9 @@ todo:
     setup docker-compose 
 
     music-service:
-        improve customer error CustomErrorHandler
         add external db 
         add a input handling/cleaning library
-        set up graceful shutdown
+        set up graceful shutdown (in progress)
 
     static file server: 
         finish web pages:

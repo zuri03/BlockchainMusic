@@ -8,38 +8,54 @@ export type Song = {
     createdAt: string 
 }
 
+const defaultSongList: Song[] = [{
+    id: '1',
+    title: 'title1',
+    authorId: 'authorId',
+    author: 'author1',
+    createdAt: 'createdAt',
+    description: 'description'
+},
+{
+    id: '2',
+    title: 'title2',
+    authorId: 'authorId',
+    author: 'author2',
+    createdAt: 'createdAt',
+    description: 'description'
+},
+{
+    id: '3',
+    title: 'title3',
+    authorId: 'authorId',
+    author: 'author3',
+    createdAt: 'createdAt',
+    description: 'description'
+}];
+
 export class SongRepository {
+
+    private static instance: SongRepository;
 
     private songs: Song[];
 
-    public constructor() {
-        this.songs =  [{
-            id: '1',
-            title: 'title1',
-            authorId: 'authorId',
-            author: 'author1',
-            createdAt: 'createdAt',
-            description: 'description'
-        },
-        {
-            id: '2',
-            title: 'title2',
-            authorId: 'authorId',
-            author: 'author2',
-            createdAt: 'createdAt',
-            description: 'description'
-        },
-        {
-            id: '3',
-            title: 'title3',
-            authorId: 'authorId',
-            author: 'author3',
-            createdAt: 'createdAt',
-            description: 'description'
-        }];
+    private constructor() {
+        this.songs =  defaultSongList;
     }
 
-    public getAllSongs() : Song[] {
+    public static getInstance(): SongRepository {
+        if (!SongRepository.instance) {
+            SongRepository.instance = new SongRepository();
+        }
+
+        return SongRepository.instance;
+    }
+
+    public resetRepository(): void {
+        this.songs = defaultSongList;
+    }
+    
+    public getAllSongs(): Song[] {
         return this.songs;
     } 
 
@@ -49,7 +65,7 @@ export class SongRepository {
         });
     }
 
-    public getSong(id: number | string) : Song | undefined {
+    public getSong(id: number | string): Song | undefined {
         id = id.toString();
         return this.songs.find(song => song['id'] === id);
     }

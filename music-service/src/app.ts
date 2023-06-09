@@ -7,7 +7,7 @@ import {
     CustomErrorHandler
 } from './middleware/middleware';
 
-export function setUp() : express.Application {
+export default function setUp() : express.Application {
     const app : express.Application = express();
 
     //allow the api to parse json bodies for post requests
@@ -31,12 +31,6 @@ export function setUp() : express.Application {
     app.use(CustomErrorHandler);
 
     return app;
-}
-
-export function start(app: express.Application) : void {
-    //temp port
-    const PORT = 8888;
-    app.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
 }
 
 /*

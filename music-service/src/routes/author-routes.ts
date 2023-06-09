@@ -3,7 +3,7 @@ import {
     SongRepository 
 } from '../db/song-repository';
 
-const repository: SongRepository = new SongRepository();
+const repository: SongRepository = SongRepository.getInstance();
 
 const router: express.Router = express.Router();
 

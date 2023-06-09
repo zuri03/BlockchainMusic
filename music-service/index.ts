@@ -1,10 +1,10 @@
-import {
-    setUp,
-    start
-} from './src/app.js';
+import setUp from './src/app.js';
 
 const app = setUp();
-start(app);
+
+//temp port
+const PORT = 8888;
+app.listen(PORT, () => console.log(`server listening on port: ${PORT}`));
 
 /*
 GET: /Song: Gets info on all music available (will need pagination),
