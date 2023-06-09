@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import { 
     Song,
     SongRepository 
@@ -58,7 +59,7 @@ router.post('/', (request: express.Request, response: express.Response, next: ex
       }
 
       const newSong: Song = {
-        id: 'placeholder',
+        id: crypto.randomUUID(),
         title: title,
         author: author,
         authorId: authorId,

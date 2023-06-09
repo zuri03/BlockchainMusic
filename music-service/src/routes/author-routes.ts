@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import { 
     SongRepository 
 } from '../db/song-repository';
