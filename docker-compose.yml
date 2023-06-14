@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  music-service:
+    image: music-service
+    build:
+      context: ./music-service/.
+      dockerfile: ./Dockerfile
+    ports:
+      - '8888:8888'
+    container_name: music-container

@@ -28,6 +28,12 @@ todo:
 
     music-service:
         add external db 
+            songId will now be the _id of mongo objects
+            remove app level id generation for songs
+            create song model
+            seperate mongodb models and request models
+            set up docker-compose at top level of project and include mongodb as a service
+            
         add a input handling/cleaning library
         add song-cover routes (add external db first)
 
