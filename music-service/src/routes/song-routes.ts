@@ -4,6 +4,7 @@ import {
     Song,
     SongRepository 
 } from '../db/song-repository';
+import { AuthorizeRequest } from '../middleware/middleware';
 
 const repository: SongRepository = SongRepository.getInstance();
 
@@ -90,6 +91,40 @@ router.delete("/:id", (request: express.Request, response: express.Response, nex
   } catch (error) {
     next(error);
   }
+});
+
+router.put("/:id", AuthorizeRequest, (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  try{
+    const id: string = request.params.id;
+    
+    const {
+      title,
+      author,
+      authorId,
+      description
+    } = request.body;
+
+    const song : Song = {
+      id,
+      title,
+      author,
+      authorId,
+      description
+    }
+
+    if (!title || !author || !authorId) {
+      const responseBody = { 
+        'error': `one or more required values missing from request body, title: ${title}, author: ${author}, authorId: ${authorId}` 
+      }
+      response.status(400).json(responseBody)
+    }
+
+    repository.UpdateSong(id, song);
+  } catch (error) {
+    next(error)
+  }
+  
+  response.status(200).end();
 });
 
 export default router;

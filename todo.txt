@@ -16,6 +16,10 @@ architecture:
         - frontend/UI
             - static file server to server html files
 todo:
+
+    implement nodejs security practices:
+        https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
+    
     setup docker-compose 
 
     music-service:
@@ -38,7 +42,14 @@ todo:
     
     user service:
         set up skeleton of user service:
+        This service will only store metadata about users
     
+    authentication service:
+        only service the user's browser can call directly
+        serves as a proxy/filter for the other services 
+            needs to be highly secure and performant
+        keeps track of session
+
     blockchain service:
         set up contract to hold snippts by a single artists
         set up skeleton of offchain part of this service

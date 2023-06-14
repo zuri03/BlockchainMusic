@@ -4,8 +4,8 @@ export type Song = {
     title: string,
     author: string,
     authorId: string,
-    description: string | undefined,
-    createdAt: string 
+    description?: string | undefined,
+    createdAt?: string | undefined,
 }
 
 const defaultSongList: Song[] = [{
@@ -65,14 +65,25 @@ export class SongRepository {
         });
     }
 
+    public getAuthor(id: number | string) : Song | undefined {
+        id = id.toString();
+        return this.songs.find(song => song['authorId'] === id);
+    }
+
     public getSong(id: number | string): Song | undefined {
         id = id.toString();
         return this.songs.find(song => song['id'] === id);
     }
 
-    public getAuthor(id: number | string) : Song | undefined {
+    public UpdateSong(id: number | string, song: Song): void {
         id = id.toString();
-        return this.songs.find(song => song['authorId'] === id);
+        const index = this.songs.findIndex(song => song['id'] === id);
+
+        const originalSong = this.songs[index];
+        originalSong.title = song.title;
+        originalSong.description = song.description;
+        
+        this.songs[index] = song;
     }
 
     public searchSong(searchTerm: string) : Song[] {

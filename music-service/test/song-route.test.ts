@@ -83,7 +83,6 @@ describe('Song routes read test', () => {
 
 describe('Song routes write tests', () => {
     const app = setUp();
-    //app.listen(8888, () => console.log('listening on port 8888'));
 
     //ensure to reset the instance back to the original 
     beforeEach(() => {
