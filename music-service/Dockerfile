@@ -11,7 +11,6 @@ COPY tsconfig.json ./
 RUN npm install 
 
 #copy over source code
-#COPY ./index.ts ./
 COPY . .
 
 #build the application

@@ -9,14 +9,18 @@ architecture:
     - multiple individual services (probably microservices pattern)
         - blockchain service
             - contains contracts 
-        - user managemnet service
-            - maintains user accounts
-            - deploys new contracts
-        - authenticaiton service
-        - frontend/UI
-            - static file server to server html files
+        - authentication service:
+            This service will only store metadata about users to allow for authentication
+        - api gateway:
+            only service the user's browser can call directly
+            serves as a proxy/filter for the other services 
+                needs to be highly secure and performant
+            keeps track of session
+        - music service:
+            - rest api that manages metadata about songs
+        - static file server:
+            - serves HTML, CSS and JS files to the user
 todo:
-
     implement nodejs security practices:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
     
@@ -32,26 +36,21 @@ todo:
         finish web pages:
             user page:
                 create user signup form
-                set up signed in user page
-                looking into using redux and JWT to handle login and state
+
             browse music page:
                 set up donwload function for each song
             
             song page:
                 improve the look of the song form
     
-    user service:
+    user/authentication service:
         set up skeleton of user service:
-        This service will only store metadata about users
-    
-    authentication service:
-        only service the user's browser can call directly
-        serves as a proxy/filter for the other services 
-            needs to be highly secure and performant
-        keeps track of session
+        
+    API Gateway:
+        set up skeleton of gateway
 
     blockchain service:
-        set up contract to hold snippts by a single artists
+        set up contract to hold songs by a single artists
         set up skeleton of offchain part of this service
         add tests to blockchain-service
         create dockerfile for offchain part of blockchain service
