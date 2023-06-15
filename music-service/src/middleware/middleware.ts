@@ -3,12 +3,12 @@ import {
     Request, 
     Response 
 } from 'express';
-import { SongRepository, Song } from '../db/song-repository';
+import { ObjectId } from 'mongodb';
+import { collections } from '../db/db';
+import Song from '../models/song';
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 3;
-
-const repository: SongRepository = SongRepository.getInstance();
 
 //If this function is called it is an internal server error, all other errors will be handled in the routes
 export const CustomErrorHandler = function (error: Error, request: Request, response: Response, next: NextFunction) {
@@ -28,10 +28,10 @@ export const AuthorizeRequest = async function (request: Request, response: Resp
         return;
     }
 
-    let song: Song | undefined = repository.getSong(id);
+    const mongoQuery = { _id: new ObjectId(id) };
+    const song = await collections.songs!.findOne(mongoQuery);
 
     if (!song) {
-        //not found
         response.status(404).json({ 'error': `Song with id ${id} not found` });
         return;
     }
@@ -41,7 +41,6 @@ export const AuthorizeRequest = async function (request: Request, response: Resp
         const authorized = await bcrypt.compare(song.authorId, authorIdHash);
 
         if (!authorized) {
-            //not found
             response.status(401).json({ 'error': `Not authorized to modify this resource` });
             return;
         }

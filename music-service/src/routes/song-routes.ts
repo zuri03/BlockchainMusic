@@ -1,21 +1,57 @@
 import express from 'express';
-import crypto from 'crypto';
-import { 
-    Song,
-    SongRepository 
-} from '../db/song-repository';
+import Song from '../models/song';
 import { AuthorizeRequest } from '../middleware/middleware';
-
-const repository: SongRepository = SongRepository.getInstance();
+import { collections } from '../db/db';
+import { ObjectId } from 'mongodb';
 
 const router: express.Router = express.Router();
 
-router.get('/', (request, response, next) => {
-    const songs: Song[] = repository.getAllSongs();
-    response.json({ 'data': songs });
+//Default '/' route
+router.get('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  const songs = await collections.songs!.find({}).toArray();
+  response.json({ 'data': songs });
 });
 
-router.get('/:id', (request, response, next) => {
+router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  try{
+    const {
+      title,
+      author,
+      authorId,
+      description
+    } = request.body;
+
+    if (!title || !author || !authorId) {
+      const responseBody = { 
+        'error': `one or more required values missing from request body, title: ${title}, author: ${author}, authorId: ${authorId}` 
+      }
+      response.status(400).json(responseBody);
+      return;
+    }
+
+    const newSong: Song = {
+      title: title,
+      author: author,
+      authorId: authorId,
+      description: description,
+      createdAt: new Date().toDateString()
+    }
+
+    const queryExecutionResult = await collections.songs!.insertOne(newSong);
+
+    if (!queryExecutionResult) {
+      response.status(500).json({ 'error': 'internal server error' });
+      return;
+    }
+  } catch (error) {
+    next(error)
+  }
+  
+  response.status(200).end();
+});
+
+// /:id Routes that reference a specific song
+router.get('/:id', async (request, response, next) => {
     const id: string | undefined = request.params.id;
 
     if (!id) {
@@ -24,7 +60,8 @@ router.get('/:id', (request, response, next) => {
         return; 
     }
 
-    const song: Song | undefined = repository.getSong(id);
+    const mongoQuery = { _id: new ObjectId(id) };
+    const song = await collections.songs!.findOne(mongoQuery);
 
     if (!song) {
         //not found
@@ -35,55 +72,22 @@ router.get('/:id', (request, response, next) => {
     response.json({ 'data': song });
 });
 
-router.get('/Search/:searchTerm', (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    const searchTerm: string | undefined = request.params.searchTerm
+router.delete("/:id", async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
-    const results : Song[] = repository.searchSong(searchTerm);
-
-    response.json({ 'data': results })
-});
-
-router.post('/', (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    try{
-      const {
-        title,
-        author,
-        authorId,
-        description
-      } = request.body;
-
-      if (!title || !author || !authorId) {
-        const responseBody = { 
-          'error': `one or more required values missing from request body, title: ${title}, author: ${author}, authorId: ${authorId}` 
-        }
-        response.status(400).json(responseBody)
-      }
-
-      const newSong: Song = {
-        id: crypto.randomUUID(),
-        title: title,
-        author: author,
-        authorId: authorId,
-        description: description,
-        createdAt: new Date().toDateString()
-      }
-      
-      repository.AddSong(newSong);
-    } catch (error) {
-      next(error)
-    }
-    
-    response.status(200).end();
-});
-
-router.delete("/:id", (request: express.Request, response: express.Response, next: express.NextFunction) => {
   const id: string = request.params.id;
 
   try {
-    const deletedSong : Song | undefined = repository.DeleteSong(id);
+    const mongoQuery = {  _id: new ObjectId(id) };
+    const deletedSong = await collections.songs!.findOne(mongoQuery);
+    const deletetionResult = await collections.songs!.deleteOne(mongoQuery);
 
-    if (!deletedSong) {
-      response.status(400).json({ 'error': `song with id ${id} not found`});
+    if (!deletetionResult) {
+      response.status(400).json({ 'error': `failed to remove song with id ${id}`});
+      return;
+    }
+
+    if (!deletetionResult.deletedCount) {
+      response.status(404).json({ 'error': `song with id ${id} not found`});
       return;
     }
 
@@ -93,39 +97,49 @@ router.delete("/:id", (request: express.Request, response: express.Response, nex
   }
 });
 
-router.put("/:id", AuthorizeRequest, (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.put("/:id", AuthorizeRequest, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
   try{
     const id: string = request.params.id;
-    
-    const {
-      title,
-      author,
-      authorId,
-      description
-    } = request.body;
 
-    const song : Song = {
-      id,
-      title,
-      author,
-      authorId,
-      description
-    }
+    const { title, author, authorId, description } = request.body;
 
     if (!title || !author || !authorId) {
       const responseBody = { 
         'error': `one or more required values missing from request body, title: ${title}, author: ${author}, authorId: ${authorId}` 
       }
-      response.status(400).json(responseBody)
+      response.status(400).json(responseBody);
+      return;
     }
 
-    repository.UpdateSong(id, song);
+    const song: Song = response.locals.song;
+    song.title = title;
+    song.description = description;
+
+    const queryExecutionResult = await collections.songs!.updateOne({ _id: new ObjectId(id) }, { $set: song });
+
+    if (!queryExecutionResult) {
+      response.status(304).json({ 'error': `unable to update resource with id ${id} `});
+      return;
+    }
   } catch (error) {
     next(error)
   }
   
   response.status(200).end();
 });
+
+// "/Search/:searchTerm" routes
+router.get('/Search/:searchTerm', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+    const searchTerm: string | undefined = request.params.searchTerm
+
+    const mongoQuery = { 
+      $or: [{ author: { $regex: `^${searchTerm}` } }, { title: { $regex: `^${searchTerm}` } }] 
+    }
+    const results = await collections.songs!.find(mongoQuery).toArray();
+
+    response.json({ 'data': results })
+});
+
 
 export default router;
 /*

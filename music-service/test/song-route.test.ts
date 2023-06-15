@@ -4,9 +4,8 @@ import { SongRepository  } from '../src/db/song-repository';
 import 'jest';
 
 //When uuid is implemented these tests will need to change to become less strict with the expected results
-describe('Song routes read test', () => {
-    const app = setUp();
-    app.listen(8888, () => console.log('listening on port 8888'));
+describe('Song routes read test', async () => {
+    const app = await setUp();
 
     test('Get All', async () => {
         const expectedResponse = { 'data': [{
@@ -81,8 +80,8 @@ describe('Song routes read test', () => {
     });
 });
 
-describe('Song routes write tests', () => {
-    const app = setUp();
+describe('Song routes write tests', async () => {
+    const app = await setUp();
 
     //ensure to reset the instance back to the original 
     beforeEach(() => {
