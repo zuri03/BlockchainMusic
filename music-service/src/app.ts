@@ -6,8 +6,12 @@ import cors from 'cors';
 import {
     CustomErrorHandler
 } from './middleware/middleware';
+import { connectToDatabase } from './db/db';
 
-export default function setUp() : express.Application {
+export default async function setUp() : Promise<express.Application> {
+
+    await connectToDatabase();
+    
     const app : express.Application = express();
 
     //allow the api to parse json bodies for post requests

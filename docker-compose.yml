@@ -1,11 +1,25 @@
 version: '3'
 
 services:
+
   music-service:
     image: music-service
+    environment:
+       - MONGO_USERNAME=${MONGO_MUSIC_SERVICE_USERNAME}
+       - MONGO_PASSWORD=${MONGO_MUSIC_SERVICE_PASSWORD}
     build:
       context: ./music-service/.
       dockerfile: ./Dockerfile
     ports:
       - '8888:8888'
+    depends_on:
+      - mongo
     container_name: music-container
+
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports: 
+      - "27017:27017"

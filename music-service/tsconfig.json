@@ -1,11 +1,10 @@
 {
     "exclude": [ "./coverage", "./build", "test", "jest.config.cjs" ],
     "compilerOptions": {
-        "types": [ "jest", "node", "express" ],
+        "types": [ "jest", "node", "express" ], 
         "target": "ES6",   
         "moduleResolution": "node",
         "module": "commonjs",
-       // "module": "ES6",
         "rootDir": ".", 
         "outDir": "./build", 
         "esModuleInterop": true,   
