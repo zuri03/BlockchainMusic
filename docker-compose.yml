@@ -7,6 +7,7 @@ services:
     environment:
        - MONGO_USERNAME=${MONGO_MUSIC_SERVICE_USERNAME}
        - MONGO_PASSWORD=${MONGO_MUSIC_SERVICE_PASSWORD}
+       - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
     build:
       context: ./music-service/.
       dockerfile: ./Dockerfile
@@ -15,11 +16,13 @@ services:
     depends_on:
       - mongo
     container_name: music-container
+    restart: unless-stopped
 
   mongo:
     image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    env_file:
+      - .env
     ports: 
       - "27017:27017"
+    volumes:
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
