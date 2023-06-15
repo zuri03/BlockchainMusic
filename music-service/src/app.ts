@@ -28,9 +28,6 @@ export default async function setUp() : Promise<express.Application> {
     //set up the music router
     app.use('/api/Song', songRouter);
 
-    //set up the author router
-    app.use('/api/Author', authorRouter)
-
     //Error handler middleware function
     app.use(CustomErrorHandler);
 

@@ -25,8 +25,10 @@ todo:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
 
     music-service:
+        increase security of mongo instance
         add pagination
-        mock external db for tests  
+        mock external db for tests
+        finish add tests for all routes  
         add a input handling/cleaning library
         add song-cover routes (add external db first)
 
@@ -37,10 +39,12 @@ todo:
                 create user signup form
 
             browse music page:
-                set up donwload function for each song
+                set up donwload function for each song (depends on blochain service)
             
             song page:
                 improve the look of the song form
+                add function to load data for a song
+                add funciton to download song (depends on blochain service)
     
     user/authentication service:
         set up skeleton of user service:

@@ -34,7 +34,7 @@ router.post('/', async (request: express.Request, response: express.Response, ne
       author: author,
       authorId: authorId,
       description: description,
-      createdAt: new Date().toDateString()
+      createdAt: new Date().toISOString()
     }
 
     const queryExecutionResult = await collections.songs!.insertOne(newSong);
