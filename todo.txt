@@ -28,9 +28,10 @@ todo:
         increase security of mongo instance
         add pagination
         mock external db for tests
-        finish add tests for all routes  
+        finish adding tests for all routes  
         add a input handling/cleaning library
         add song-cover routes (add external db first)
+        imporve security of docker container
 
     static file server: 
         improve the look of each page and the site theme

@@ -1,4 +1,14 @@
+const titleError = function () {
+   $('#song-title').attr('style', 'border-color: red; animation: horizontal-shaking 0.25s linear infinite;');
+    $('#error-title-alert').show();
+
+    setTimeout(() => $('#song-title').attr('style', 'border-color: red;'), 1000);
+    setTimeout(() => $('#song-title').removeAttr('style'), 5000);
+    setTimeout(() => $('#error-title-alert').hide(), 5000);
+}
+
 const tenSecondDelay = 10000;
+
 $('#song-form').submit(function (event) {
     event.preventDefault();
 
@@ -6,6 +16,17 @@ $('#song-form').submit(function (event) {
     const description = $('#song-description').val();
     const authorId = $('#author-id').val();
     const author = $('#author-name').val();
+
+    if (!title || title.length === 0) {
+        titleError();
+        return;
+    }
+
+    if (!author || !author.length || !authorId || !authorId.length) {
+        $('#error-alert').show();
+        setTimeout(() => $('#error-alert').hide(), 5000);
+        return;
+    }
 
     const requestObj = {
         title,

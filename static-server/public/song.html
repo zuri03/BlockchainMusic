@@ -15,6 +15,7 @@
 
 		<!-- Custom CSS -->
 		<link rel="stylesheet" href="./css/app.css"/>
+		<link rel="stylesheet" href="./css/song.css"/>
 		<!-- /Custom CSS -->
 	</head>
 	<body>
@@ -48,25 +49,35 @@
 				<div class="alert alert-danger" id="error-alert" style="display:none" role="alert">
 					Oops, an error has occurred while saving your song.
 				</div>
+				<div class="alert alert-danger" id="error-title-alert" style="display:none" role="alert">
+					Please submit a title for your song.
+				</div>
+				<div class="alert alert-danger" id="error-song-alert" style="display:none" role="alert">
+					Please submit a file for your song
+				</div>
                 <div class="d-flex justify-content-center">
                     <div class="card" style="width: 50%">
-                        <div class="card-header">
-                            <div class="card-title">New Song</div>
+                        <div class="card-header" id="form-header">
+                            <div class="card-title song-form-title">New Song</div>
                         </div>
 
-                        <form class="d-flex row justify-content-center my-3" id="song-form">
+                        <form class="d-flex row justify-content-center" id="song-form">
 
                             <input id="author-id" value="placeholder-id" hidden/>
                             <input id="author-name" value="placeholder-username" hidden/>
 
                             <div class="card-body">
-                                <div class="form-group row m-1">
+                                <div class="form-group row m-1 song-text-row">
                                     <label>Title</label>
-                                    <input class="form-control me-2" id="song-title" type="search" placeholder="Your song's title..." aria-label="Search">
+									<div class="song-form-text">
+										<input class="form-control me-2" id="song-title" type="search" placeholder="Your song's title..." aria-label="Search">
+									</div>
                                 </div>
-                                <div class="form-group row m-1">
+                                <div class="form-group row m-1 song-text-row">
                                     <label>Description</label>
-                                    <input class="form-control me-2" id="song-description" type="search" placeholder="Your song's description..." aria-label="Search">
+									<div class="song-form-text">
+										<input class="form-control me-2" id="song-description" type="search" placeholder="Your song's description..." aria-label="Search">
+									</div>
                                 </div>
                                 <div class="form-group row m-1">
                                     <label>Song File</label>
@@ -78,7 +89,7 @@
                                 </div>
                                 <div class="form-group row mt-3 mx-1 text-end">
                                     <div class="col-1">
-                                        <button class="btn btn-outline-success" type="submit">Submit</button>
+                                        <button class="btn app-btn" type="submit">Submit</button>
                                     </div>
                                 </div>
                             </div>
