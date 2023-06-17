@@ -8,7 +8,6 @@
         "rootDir": ".", 
         "outDir": "./build", 
         "esModuleInterop": true,   
-        //"traceResolution": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,                   
         "skipLibCheck": true,

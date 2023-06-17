@@ -6,5 +6,6 @@ export default interface Song {
     author: string,
     authorId: string,
     description?: string | undefined,
+    coverURL?: string | undefined,
     createdAt?: string | undefined,
 }
