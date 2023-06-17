@@ -1,21 +1,20 @@
 import express from 'express'
 import bodyParser from 'body-parser';
 import songRouter from './routes/song-routes';
-import authorRouter from './routes/song-routes'
+import coverRouter from './routes/cover-routes'
 import cors from 'cors';
-import {
-    CustomErrorHandler
-} from './middleware/middleware';
+import multer from 'multer';
+import { CustomErrorHandler } from './middleware/middleware';
 import { connectToDatabase } from './db/db';
 
-export default async function setUp() : Promise<express.Application> {
+export default async function configureApp() : Promise<express.Application> {
 
     await connectToDatabase();
     
     const app : express.Application = express();
 
-    //allow the api to parse json bodies for post requests
-    app.use(bodyParser.json());
+    //initialize multer
+    const upload = multer();
 
     app.use(cors());
 
@@ -25,8 +24,9 @@ export default async function setUp() : Promise<express.Application> {
         next();
     });
 
-    //set up the music router
-    app.use('/api/Song', songRouter);
+    //set up the song and cover router
+    app.use('/api/Song', bodyParser.json(), songRouter);
+    app.use('/api/Cover', upload.single('cover-file'), coverRouter);
 
     //Error handler middleware function
     app.use(CustomErrorHandler);
@@ -44,16 +44,9 @@ POST: /Song: Adds new music to the DB
     'title': 'example', //song title
     'author': 'example', //username of the user who uploaded the song
     'authorId' <id>, //id of the user who uploaded the song
-    'cover': <coverId>, //id of the cover image for the song (may not be included)
+    'coverURL': <coverURL>, //url of the cover 
     'createdAt': <datetime>, //datetime created on the server
 }
 DELETE: /Music/<id>: Deletes music from the db
-
-The author routes may not be necessary
-GET: /Author: Gets informaiton on all authors
-GET: /Author/<id>: Gets information on a specific artist
-GET: /Author/Search/<searchTerm>: Gets info on all artists that match a search term
-GET: /Cover/<id>: Gets a song's cover image 
-
 */
  

@@ -5,7 +5,6 @@ import {
 } from 'express';
 import { ObjectId } from 'mongodb';
 import { collections } from '../db/db';
-import Song from '../models/song';
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 3;

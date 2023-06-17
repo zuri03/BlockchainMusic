@@ -1,7 +1,7 @@
-import setUp from './src/app.js';
+import configureApp from './src/app.js';
 
 (async function () {
-    const app = await setUp();
+    const app = await configureApp();
 
     //temp port
     const PORT = 8888;
