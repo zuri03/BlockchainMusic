@@ -21,7 +21,7 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
-    setup and configure s3 bucket
+    update node version to remove 'unsupported engine' warnings
 
     implement nodejs security practices:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
@@ -34,10 +34,6 @@ todo:
         add a input handling/cleaning library
         imporve security of docker container
         properly configure CORS
-        storing covers:
-            set up covers route to allow users to upload images (add a hard limit to image size for security)
-            return URL or ideally just image id back to client and store it in input field
-            submit the rest of the data including the image URL to the song routes as a json
 
     static file server: 
         improve the look of each page and the site theme

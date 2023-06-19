@@ -6,10 +6,13 @@ import cors from 'cors';
 import multer from 'multer';
 import { CustomErrorHandler } from './middleware/middleware';
 import { connectToDatabase } from './db/db';
+import { configureS3Client } from './clients/s3-client';
 
 export default async function configureApp() : Promise<express.Application> {
 
     await connectToDatabase();
+
+    configureS3Client();
     
     const app : express.Application = express();
 
@@ -47,6 +50,6 @@ POST: /Song: Adds new music to the DB
     'coverURL': <coverURL>, //url of the cover 
     'createdAt': <datetime>, //datetime created on the server
 }
-DELETE: /Music/<id>: Deletes music from the db
+DELETE: /Song/<id>: Deletes music from the db
 */
  

@@ -15,6 +15,7 @@
     "docker-remove": "docker rmi --force song-service"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.354.0",
     "@types/express": "^4.17.17",
     "bcrypt": "^5.1.0",
     "cors": "2.8.5",

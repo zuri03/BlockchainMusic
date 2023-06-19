@@ -1,15 +1,9 @@
-//For now the db will remain as internal memory until an external db is added
-export type Song = {
-    id: string,
-    title: string,
-    author: string,
-    authorId: string,
-    description?: string | undefined,
-    createdAt?: string | undefined,
-}
+import { ObjectId } from 'mongodb';
+import Song from '../models/song';
 
+//Internal DB used for local development
 const defaultSongList: Song[] = [{
-    id: '1',
+    id: new ObjectId('1'),
     title: 'title1',
     authorId: 'authorId',
     author: 'author1',
@@ -17,7 +11,7 @@ const defaultSongList: Song[] = [{
     description: 'description'
 },
 {
-    id: '2',
+    id: new ObjectId('2'),
     title: 'title2',
     authorId: 'authorId',
     author: 'author2',
@@ -25,7 +19,7 @@ const defaultSongList: Song[] = [{
     description: 'description'
 },
 {
-    id: '3',
+    id: new ObjectId('3'),
     title: 'title3',
     authorId: 'authorId',
     author: 'author3',
@@ -69,7 +63,7 @@ export class SongRepository {
         id = id.toString();
         return this.songs.find(song => song['authorId'] === id);
     }
-
+    /*
     public getSong(id: number | string): Song | undefined {
         id = id.toString();
         return this.songs.find(song => song['id'] === id);
@@ -116,4 +110,5 @@ export class SongRepository {
 
         return deletedSong;
     }
+    */
 } 
