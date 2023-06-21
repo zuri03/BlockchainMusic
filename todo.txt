@@ -21,10 +21,15 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    create README
+    
     update node version to remove 'unsupported engine' warnings
 
     implement nodejs security practices:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
+    
+    s3 security practices
+        https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
     music-service:
         increase security of mongo instance
@@ -34,6 +39,9 @@ todo:
         add a input handling/cleaning library
         imporve security of docker container
         properly configure CORS
+        limit file size of covers using multer config and limit it to jpeg/png
+        Look into creating custom client to interact with S3 rest api   
+            - this would allow me to remove the @aws-sdk/client-s3 dependency
 
     static file server: 
         improve the look of each page and the site theme

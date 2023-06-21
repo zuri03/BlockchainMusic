@@ -8,6 +8,10 @@ services:
        - MONGO_USERNAME=${MONGO_MUSIC_SERVICE_USERNAME}
        - MONGO_PASSWORD=${MONGO_MUSIC_SERVICE_PASSWORD}
        - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
+       - AWS_BUCKET_REGION=${AWS_BUCKET_REGION}
+       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
     build:
       context: ./music-service/.
       dockerfile: ./Dockerfile
