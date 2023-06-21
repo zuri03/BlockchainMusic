@@ -8,6 +8,8 @@ import { CustomErrorHandler } from './middleware/middleware';
 import { connectToDatabase } from './db/db';
 import { configureS3Client } from './clients/s3-client';
 
+const FILE_UPLOAD_MAX_SIZE = 40000;
+
 export default async function configureApp() : Promise<express.Application> {
 
     await connectToDatabase();
@@ -17,7 +19,7 @@ export default async function configureApp() : Promise<express.Application> {
     const app : express.Application = express();
 
     //initialize multer
-    const upload = multer();
+    const upload = multer({ limits: { fileSize: FILE_UPLOAD_MAX_SIZE } });
 
     app.use(cors());
 
