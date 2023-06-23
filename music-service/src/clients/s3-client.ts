@@ -23,7 +23,7 @@ export const configureS3Client = function (): void {
         }
     });
 
-    s3BucketName = process.env.BUCKET_NAME;
+    s3BucketName = process.env.AWS_BUCKET_NAME;
 
     if (!s3BucketName) {
         throw new Error("Bucket name is not defined");

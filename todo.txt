@@ -32,14 +32,14 @@ todo:
         https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
     music-service:
-        increase security of mongo instance
-        add pagination
-        mock external db for tests
-        finish adding tests for all routes  
-        add a input handling/cleaning library
-        imporve security of docker container
+        increase security of mongo instance (research)
+        mock external db for tests (research)
+        finish adding tests for all routes (depends on mock db)
+        add a input handling/cleaning library 
+        imporve security of docker container (research)
+        use a cache to improve speed of requests (research)
         properly configure CORS
-        Look into creating custom client to interact with S3 rest api   
+        Look into creating custom client to interact with S3 rest api (research)
             - this would allow me to remove the @aws-sdk/client-s3 dependency
 
     static file server: 
@@ -50,6 +50,7 @@ todo:
 
             browse music page:
                 set up donwload function for each song (depends on blochain service)
+                add pagination functionality
             
             song page:
                 improve the look of the song form
@@ -57,10 +58,13 @@ todo:
                 add funciton to download song (depends on blochain service)
     
     user/authentication service:
-        set up skeleton of user service:
+        set up skeleton of user service
+        determine shape of user objects
+        determine which external db will store objects
         
     API Gateway:
         set up skeleton of gateway
+        determine which authenticaiton and authorization mechanism to use (research)
 
     blockchain service:
         set up contract to hold songs by a single artists

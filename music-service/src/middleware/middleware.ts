@@ -8,6 +8,9 @@ import { collections } from '../db/db';
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 3;
+const PAGE_LIMIT = 100;
+const DEFAULT_OFFSET = 0;
+const DEFAULT_PAGE_SIZE = 10;
 
 //If this function is called it is an internal server error, all other errors will be handled in the routes
 export const CustomErrorHandler = function (error: Error, request: Request, response: Response, next: NextFunction) {
@@ -51,3 +54,42 @@ export const AuthorizeRequest = async function (request: Request, response: Resp
         next(error);
     }   
 } 
+
+export const ParsePagination = async function (request: Request, response: Response, next: NextFunction) {
+    const offset: number = parseInt((request.query.offset || DEFAULT_OFFSET) as string);
+    const pageSize: number = parseInt((request.query.pageSize || DEFAULT_PAGE_SIZE) as string);
+
+    if (isNaN(offset) || isNaN(pageSize)) {
+        response.status(400).json({ 'error': 'offset and pageSize must be an integer' });
+        return;
+    } 
+
+    if (pageSize > PAGE_LIMIT) {
+        response.status(400).json({ 'error': `page size is too large, must be <100` });
+        return;
+    }
+
+    if (pageSize <= 0) {
+        response.status(400).json({ 'error': `page size must be <0` });
+        return;
+    }
+
+    if (offset < 0) {
+        response.status(400).json({ 'error': `page size must be greater than or equal to 0` });
+        return;
+    }
+
+    try {
+        const documentCount = await collections.songs!.estimatedDocumentCount();
+
+        response.locals.paging = {
+            offset: offset,
+            pageSize,
+            totalCount: documentCount
+        }
+
+        next();
+    } catch (error) {
+        next(error);
+    }
+}

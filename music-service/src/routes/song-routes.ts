@@ -1,15 +1,27 @@
 import express from 'express';
 import Song from '../models/song';
+import { Paging, PaginatedResult } from '../models/pagination';
 import { AuthorizeRequest } from '../middleware/middleware';
 import { collections } from '../db/db';
 import { ObjectId } from 'mongodb';
+import { ParsePagination } from '../middleware/middleware';
 
 const router: express.Router = express.Router();
 
 //Default '/' route
-router.get('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-  const songs = await collections.songs!.find({}).toArray();
-  response.json({ 'data': songs });
+router.get('/', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+
+  const paging: Paging = response.locals.paging as Paging;
+
+  const songs = await collections.songs!.find({})
+    .sort({ title: 1})
+    .skip(paging.offset)
+    .limit(paging.pageSize)
+    .toArray();
+
+  const results: PaginatedResult = { paging, data: songs }
+
+  response.json(results);
 });
 
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
