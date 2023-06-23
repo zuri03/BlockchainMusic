@@ -65,7 +65,7 @@ export const ParsePagination = async function (request: Request, response: Respo
     } 
 
     if (pageSize > PAGE_LIMIT) {
-        response.status(400).json({ 'error': `page size is too large, must be <100` });
+        response.status(400).json({ 'error': `pageSize is too large, must be <${PAGE_LIMIT}` });
         return;
     }
 
