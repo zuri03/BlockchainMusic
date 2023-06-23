@@ -27,7 +27,7 @@ const renderSongs = function (data) {
                     <img src="./example-cover.png" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title text-start"><b>${firstSong['author']}</b>: ${firstSong['title']}</h5>
-                        <p class="card-text text-start">${firstSong['description'] || ''}</p>
+                        <p class="card-text text-start" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${firstSong['description'] || ''}</p>
                         <a href="#" class="btn app-btn">Download</a>
                     </div>
                 </div>
@@ -40,7 +40,7 @@ const renderSongs = function (data) {
                         <img src="./example-cover.png" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title text-start"><b>${secondSong['author']}</b>: ${secondSong['title']}</h5>
-                            <p class="card-text text-start">${secondSong['description'] || ''}</p>
+                            <p class="card-text text-start" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${secondSong['description'] || ''}</p>
                             <a href="#" class="btn app-btn">Download</a>
                         </div>
                     </div>
@@ -67,6 +67,7 @@ const LoadSongs = function () {
         url: apiUrl,
         beforeSend: () => $('#song-loading').show(),
         success: function (result) {
+            console.log(result)
             $('#song-loading').hide();
             renderSongs(result['data']);
             console.log({ result })
