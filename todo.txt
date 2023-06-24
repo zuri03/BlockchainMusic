@@ -21,6 +21,8 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    set up HTTPS
+    
     create README
 
     update node version to remove 'unsupported engine' warnings

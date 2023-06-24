@@ -46,20 +46,23 @@
       </nav>
       <div class="container">
         <div class="row justify-content-center pt-5">
+          <div class="alert alert-danger" id="error-alert" style="display:none" role="alert">
+            Oops, an error has occurred while creating a new account.
+          </div>
           <div class="card w-50">
             <div class="custom-header">
               <h5 class="card-title">Sign Up</h5>
             </div>
-            <form id="signup-form">
+            <form id="signup-form" class="val">
               <div class="card-body row justify-content-center">
                 <div class="row w-75 my-2">
                   <input type="text" class="form-control" name="username" placeholder="username" aria-label="username"/>
                 </div>
                 <div class="row w-75 my-2">
-                  <input type="password" class="form-control" name="password" placeholder="password" aria-label="password"/>
+                  <input type="password" class="form-control"  id="password" name="password" placeholder="password" aria-label="password"/>
                 </div>
                 <div class="row w-75 my-2">
-                  <input type="password" class="form-control" placeholder="confirm password" aria-label="confirm password"/>
+                  <input type="password" class="form-control" name="passwordConfirm" placeholder="confirm password" aria-label="confirm password"/>
                 </div>
                 <div class="row w-75 my-2">
                   <button class="btn app-btn">Sign Up</button>
@@ -77,6 +80,7 @@
       src="https://code.jquery.com/jquery-3.6.4.js"
       integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
       crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- /Bootstrap and jQuery -->
 
     <!-- Custom JS -->
