@@ -141,15 +141,31 @@ router.put("/:id", AuthorizeRequest, async (request: express.Request, response: 
 });
 
 // "/Search/:searchTerm" routes
-router.get('/Search/:searchTerm', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    const searchTerm: string | undefined = request.params.searchTerm
+router.get('/Search/:searchTerm', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
-    const mongoQuery = { 
-      $or: [{ author: { $regex: `^${searchTerm}` } }, { title: { $regex: `^${searchTerm}` } }] 
-    }
-    const results = await collections.songs!.find(mongoQuery).toArray();
+  const paging: Paging = response.locals.paging as Paging;
+  const searchTerm: string | undefined = request.params.searchTerm
 
-    response.json({ 'data': results })
+  const mongoQuery = { 
+    $or: [
+      { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
+      { title: { $regex: `^${searchTerm}`, $options: 'i' } }
+    ] 
+  }
+
+  try {
+    const songs = await collections.songs!.find(mongoQuery)
+      .sort({ title: 1})
+      .skip(paging.offset)
+      .limit(paging.pageSize)
+      .toArray();
+
+    const results: PaginatedResult = { paging, data: songs }
+
+    response.json(results);
+  } catch (error) {
+    next(error);
+  }
 });
 
 
