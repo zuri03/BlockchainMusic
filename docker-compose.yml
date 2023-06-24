@@ -2,6 +2,16 @@ version: '3'
 
 services:
 
+  user-service:
+    image: user-service
+    build:
+      context: ./user-service/.
+      dockerfile: ./Dockerfile
+    ports:
+      - '8008:8008'
+    container_name: user-container
+    restart: unless-stopped
+
   music-service:
     image: music-service
     environment:

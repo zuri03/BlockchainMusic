@@ -40,7 +40,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost:8888/api/User",
+            url: "http://localhost:8008/api/User",
             data: JSON.stringify(user),
             contentType: "application/json; charset=utf-8",
             success: function () {
