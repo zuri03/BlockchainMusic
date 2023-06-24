@@ -2,15 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Web site for blockchainmusic system"
     />
-    <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
-    <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
+
     <title>User Profile</title>
 
     <!-- Bootstrap -->
@@ -19,6 +17,7 @@
 
     <!-- Custom CSS -->
 		<link rel="stylesheet" href="./css/app.css"/>
+		<link rel="stylesheet" href="./css/user.css"/>
 		<!-- /Custom CSS -->
   </head>
   <body>
@@ -46,7 +45,29 @@
         </div>
       </nav>
       <div class="container">
-        THIS IS USER
+        <div class="row justify-content-center pt-5">
+          <div class="card w-50">
+            <div class="custom-header">
+              <h5 class="card-title">Sign Up</h5>
+            </div>
+            <form id="signup-form">
+              <div class="card-body row justify-content-center">
+                <div class="row w-75 my-2">
+                  <input type="text" class="form-control" name="username" placeholder="username" aria-label="username"/>
+                </div>
+                <div class="row w-75 my-2">
+                  <input type="password" class="form-control" name="password" placeholder="password" aria-label="password"/>
+                </div>
+                <div class="row w-75 my-2">
+                  <input type="password" class="form-control" placeholder="confirm password" aria-label="confirm password"/>
+                </div>
+                <div class="row w-75 my-2">
+                  <button class="btn app-btn">Sign Up</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -58,12 +79,8 @@
       crossorigin="anonymous"></script>
     <!-- /Bootstrap and jQuery -->
 
-    <script>
-      $(document).ready(() => {
-          $.ajax({
-            url: 'http://localhost:8888'
-          })
-      });
-    </script>
+    <!-- Custom JS -->
+    <script src="./js/user.js" ></script>
+    <!-- /Custom JS -->
   </body>
 </html>

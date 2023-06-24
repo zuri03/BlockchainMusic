@@ -8,22 +8,81 @@ import { ParsePagination } from '../middleware/middleware';
 
 const router: express.Router = express.Router();
 
-//Default '/' route
+//GET
 router.get('/', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
   const paging: Paging = response.locals.paging as Paging;
 
-  const songs = await collections.songs!.find({})
-    .sort({ title: 1})
-    .skip(paging.offset)
-    .limit(paging.pageSize)
-    .toArray();
+  try {
+    const songs = await collections.songs!.find({})
+      .sort({ title: 1})
+      .skip(paging.offset)
+      .limit(paging.pageSize)
+      .toArray();
 
-  const results: PaginatedResult = { paging, data: songs }
+    const results: PaginatedResult = { paging, data: songs }
 
-  response.json(results);
+    response.json(results);
+
+  } catch (error) {
+    next(error);
+  }
 });
 
+router.get('/:id', async (request, response, next) => {
+  const id: string | undefined = request.params.id;
+
+  if (!id) {
+      //bad request
+      response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+      return; 
+  }
+
+  const mongoQuery = { _id: new ObjectId(id) };
+
+  try {
+    const song = await collections.songs!.findOne(mongoQuery);
+
+    if (!song) {
+      //not found
+      response.status(404).json({ 'error': `Song with id ${id} not found` });
+      return;
+    }
+
+    response.json({ 'data': song });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/Search/:searchTerm', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+
+  const paging: Paging = response.locals.paging as Paging;
+  const searchTerm: string | undefined = request.params.searchTerm
+
+  const mongoQuery = { 
+    $or: [
+      { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
+      { title: { $regex: `^${searchTerm}`, $options: 'i' } }
+    ] 
+  }
+
+  try {
+    const songs = await collections.songs!.find(mongoQuery)
+      .sort({ title: 1})
+      .skip(paging.offset)
+      .limit(paging.pageSize)
+      .toArray();
+
+    const results: PaginatedResult = { paging, data: songs }
+
+    response.json(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//POST
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
   try{
     const {
@@ -62,28 +121,7 @@ router.post('/', async (request: express.Request, response: express.Response, ne
   response.status(200).end();
 });
 
-// /:id Routes that reference a specific song
-router.get('/:id', async (request, response, next) => {
-    const id: string | undefined = request.params.id;
-
-    if (!id) {
-        //bad request
-        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
-        return; 
-    }
-
-    const mongoQuery = { _id: new ObjectId(id) };
-    const song = await collections.songs!.findOne(mongoQuery);
-
-    if (!song) {
-        //not found
-        response.status(404).json({ 'error': `Song with id ${id} not found` });
-        return;
-    }
-
-    response.json({ 'data': song });
-});
-
+//DELETE
 router.delete("/:id", async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
   const id: string = request.params.id;
@@ -109,6 +147,7 @@ router.delete("/:id", async (request: express.Request, response: express.Respons
   }
 });
 
+//PUT
 router.put("/:id", AuthorizeRequest, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
   try{
     const id: string = request.params.id;
@@ -139,35 +178,6 @@ router.put("/:id", AuthorizeRequest, async (request: express.Request, response: 
   
   response.status(200).end();
 });
-
-// "/Search/:searchTerm" routes
-router.get('/Search/:searchTerm', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-
-  const paging: Paging = response.locals.paging as Paging;
-  const searchTerm: string | undefined = request.params.searchTerm
-
-  const mongoQuery = { 
-    $or: [
-      { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
-      { title: { $regex: `^${searchTerm}`, $options: 'i' } }
-    ] 
-  }
-
-  try {
-    const songs = await collections.songs!.find(mongoQuery)
-      .sort({ title: 1})
-      .skip(paging.offset)
-      .limit(paging.pageSize)
-      .toArray();
-
-    const results: PaginatedResult = { paging, data: songs }
-
-    response.json(results);
-  } catch (error) {
-    next(error);
-  }
-});
-
 
 export default router;
 /*
