@@ -33,9 +33,9 @@ router.get('/:id', async (request, response, next) => {
   const id: string | undefined = request.params.id;
 
   if (!id) {
-      //bad request
-      response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
-      return; 
+    //bad request
+    response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+    return; 
   }
 
   const mongoQuery = { _id: new ObjectId(id) };

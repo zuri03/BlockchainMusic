@@ -7,10 +7,28 @@ services:
     build:
       context: ./user-service/.
       dockerfile: ./Dockerfile
+    environment:
+      - MONGO_USERNAME=${MONGO_USER_SERVICE_USERNAME}
+      - MONGO_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
+      - MONGO_DB_NAME=${INIT_DATABASE}
     ports:
       - '8008:8008'
     container_name: user-container
     restart: unless-stopped
+
+  user-mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${INIT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${INIT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${INIT_DATABASE}
+      - MONGO_USER_SERVICE_USERNAME=${MONGO_USER_SERVICE_USERNAME}
+      - MONGO_USER_SERVICE_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
+    ports: 
+      - "27017:27017"
+    volumes:
+      - ./scripts/user-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
 
   music-service:
     image: music-service
@@ -32,11 +50,11 @@ services:
     container_name: music-container
     restart: unless-stopped
 
-  mongo:
+  music-mongo:
     image: mongo:latest
     env_file:
       - .env
     ports: 
       - "27017:27017"
     volumes:
-      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./scripts/music-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

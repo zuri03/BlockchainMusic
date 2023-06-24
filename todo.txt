@@ -61,9 +61,9 @@ todo:
                 add funciton to download song (depends on blochain service)
     
     user/authentication service:
-        set up skeleton of user service
+        hash user passwords for storage
+        set up mysql db
         determine shape of user objects
-        determine which external db will store objects
         
     API Gateway:
         set up skeleton of gateway
