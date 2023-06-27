@@ -3,8 +3,12 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import userRouter from './routes/user-routes';
 import { CustomErrorHandler } from './middleware/middleware-functions';
+import { connectToDatabase } from './db/database';
 
 export default async function configureApp() : Promise<express.Application> {
+
+    await connectToDatabase();
+    
     const app : express.Application = express();
 
     app.use(cors());

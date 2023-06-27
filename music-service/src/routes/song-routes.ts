@@ -8,6 +8,10 @@ import { ParsePagination } from '../middleware/middleware';
 
 const router: express.Router = express.Router();
 
+/*
+
+*/
+
 //GET
 router.get('/', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
@@ -38,9 +42,10 @@ router.get('/:id', async (request, response, next) => {
     return; 
   }
 
-  const mongoQuery = { _id: new ObjectId(id) };
-
   try {
+
+    const mongoQuery = { _id: new ObjectId(id) };
+
     const song = await collections.songs!.findOne(mongoQuery);
 
     if (!song) {
@@ -60,14 +65,15 @@ router.get('/Search/:searchTerm', ParsePagination, async (request: express.Reque
   const paging: Paging = response.locals.paging as Paging;
   const searchTerm: string | undefined = request.params.searchTerm
 
-  const mongoQuery = { 
-    $or: [
-      { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
-      { title: { $regex: `^${searchTerm}`, $options: 'i' } }
-    ] 
-  }
-
   try {
+
+    const mongoQuery = { 
+      $or: [
+        { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
+        { title: { $regex: `^${searchTerm}`, $options: 'i' } }
+      ] 
+    }
+
     const songs = await collections.songs!.find(mongoQuery)
       .sort({ title: 1})
       .skip(paging.offset)

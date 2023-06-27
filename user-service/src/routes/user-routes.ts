@@ -19,9 +19,10 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
         return; 
     }
 
-    const mongoQuery = { _id: new ObjectId(id) };
-
     try{
+
+        const mongoQuery = { _id: new ObjectId(id) };
+
         //search db based on id
         const user = await collections.users!.findOne(mongoQuery);
 

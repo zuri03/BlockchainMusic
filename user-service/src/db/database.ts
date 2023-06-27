@@ -17,8 +17,8 @@ export async function connectToDatabase() {
     mongodbUserUsername = encodeURIComponent(mongodbUserUsername!)
     mongodbUserPassword = encodeURIComponent(mongodbUserPassword!)
 
-    const mongodbConnectionString = `mongodb://${mongodbUserUsername}:${mongodbUserPassword}@mongo:27017/users`
-
+    const mongodbConnectionString = `mongodb://${mongodbUserUsername}:${mongodbUserPassword}@${encodeURIComponent('user-mongo')}:27017/users`
+    
     const client = new mongoDB.MongoClient(mongodbConnectionString);
 
     await client.connect();
