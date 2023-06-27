@@ -1,6 +1,10 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import { collections } from '../db/database';
 import { ObjectId } from 'mongodb';
+import User from '../models/user';
+
+const SALT_ROUNDS = 10;
 
 const router: express.Router = express.Router();
 
@@ -22,9 +26,9 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
         const user = await collections.users!.findOne(mongoQuery);
 
         if (!user) {
-        //not found
-        response.status(404).json({ 'error': `User with id ${id} not found` });
-        return;
+            //not found
+            response.status(404).json({ 'error': `User with id ${id} not found` });
+            return;
         }
 
         response.json({ 'data': user });
@@ -35,24 +39,34 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
 
 //POST
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    try{
-        const { username, password } = request.body;
+    
+    const { username, password } = request.body;
 
-        if (!username || !password) {
-            const responseBody = { 
+    if (!username || !password) {
+        const responseBody = { 
             'error': `one or more required values missing from request body` 
-            }
-            response.status(400).json(responseBody);
-            return;
+        }
+        response.status(400).json(responseBody);
+        return;
+    }
+
+    try {
+        //hash the password
+        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+        
+        //create a new user object
+        const user: User = {
+            username,
+            password: passwordHash
         }
 
-        //hash the password
-
-        //create a new user object
-
         //store new user in db
+        const insertionExecutionResults = await collections.users!.insertOne(user);
 
-        console.log({ username, password });
+        if (!insertionExecutionResults) {
+            response.status(500).json({ 'error': 'internal server error' });
+            return;
+        }
     } catch (error) {
         next(error);
     }
