@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import userRouter from './routes/user-routes';
-import loginRouter from './routes/login-routes';
+import authenticationRouter from './routes/authenticate-routes';
 import { CustomErrorHandler } from './middleware/middleware-functions';
 import { connectToDatabase } from './db/database';
 
@@ -22,7 +22,7 @@ export default async function configureApp() : Promise<express.Application> {
 
     app.use(bodyParser.json());
 
-    app.use('/login', loginRouter)
+    app.use('/auth', authenticationRouter)
 
     app.use('/api/User', userRouter);
 
