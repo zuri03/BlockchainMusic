@@ -14,25 +14,25 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
     const id: string | undefined = request.params.id;
 
     if (!id) {
-        //bad request
-        response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
-        return; 
+      //bad request
+      response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+      return; 
     }
 
     try{
 
-        const mongoQuery = { _id: new ObjectId(id) };
+      const mongoQuery = { _id: new ObjectId(id) };
 
-        //search db based on id
-        const user = await collections.users!.findOne(mongoQuery);
+      //search db based on id
+      const user = await collections.users!.findOne(mongoQuery);
 
-        if (!user) {
-            //not found
-            response.status(404).json({ 'error': `User with id ${id} not found` });
-            return;
-        }
+      if (!user) {
+        //not found
+        response.status(404).json({ 'error': `User with id ${id} not found` });
+        return;
+      }
 
-        response.json({ 'data': user });
+      response.json({ 'data': user });
     } catch (error) {
         next(error);
     }
@@ -41,38 +41,54 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
 //POST
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     
-    const { username, password } = request.body;
+  const { username, password } = request.body;
 
-    if (!username || !password) {
-        const responseBody = { 
-            'error': `one or more required values missing from request body` 
-        }
-        response.status(400).json(responseBody);
-        return;
+  if (!username || !password) {
+    const responseBody = { 
+        'error': `one or more required values missing from request body` 
+    }
+    response.status(400).json(responseBody);
+    return;
+  }
+
+  try {
+
+    const mongoQuery = { username: { $regex: `${username}`, $options: 'i' } };
+
+    //search db based on id
+    const user = await collections.users!.findOne(mongoQuery);
+
+    if (user) {
+      //resource exists
+      response.status(409).json({ 'error': `resource already exists` });
+      return;
+    }
+  } catch (error) {
+    next(error);
+  }
+
+  try {
+    //hash the password
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    
+    //create a new user object
+    const user: User = {
+        username,
+        password: passwordHash
     }
 
-    try {
-        //hash the password
-        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-        
-        //create a new user object
-        const user: User = {
-            username,
-            password: passwordHash
-        }
+    //store new user in db
+    const insertionExecutionResults = await collections.users!.insertOne(user);
 
-        //store new user in db
-        const insertionExecutionResults = await collections.users!.insertOne(user);
-
-        if (!insertionExecutionResults) {
-            response.status(500).json({ 'error': 'internal server error' });
-            return;
-        }
-    } catch (error) {
-        next(error);
+    if (!insertionExecutionResults) {
+      response.status(500).json({ 'error': 'internal server error' });
+      return;
     }
+  } catch (error) {
+    next(error);
+  }
 
-    response.status(200).end();
+  response.status(200).end();
 });
 
 export default router;

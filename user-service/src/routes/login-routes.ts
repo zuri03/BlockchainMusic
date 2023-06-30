@@ -1,0 +1,50 @@
+import express from 'express';
+import bcrypt from 'bcrypt';
+import { collections } from '../db/database';
+
+const router: express.Router = express.Router();
+
+//POST
+router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+    
+    const { username, password } = request.body;
+
+    if (!username || !password) {
+        const responseBody = { 
+            'error': `one or more required values missing from request body` 
+        }
+        response.status(400).json(responseBody);
+        return;
+    }
+
+    try {
+        const mongoQuery = { username: { $regex: `${username}`, $options: 'i' } };
+
+        //usernames are unique so there should only be one result to the query
+        const result = await collections.users!.findOne(mongoQuery);
+
+        if (!result) {
+            //return error to show login credentials could not be found
+            //temp error
+            const responseBody = { 
+                'error': `credentials could not be found` 
+            }
+            response.status(403).json(responseBody);
+            return;
+        }
+
+        const authenticated = await bcrypt.compare(password, result.password);
+
+        if (!authenticated) {
+            response.status(401).json({ 'error': 'unauthenticated' });
+            return;
+        }
+
+        //return only the userid
+        response.status(200).json({ 'data': result._id })
+    } catch (error) {
+        next(error);
+    }
+});
+
+export default router;

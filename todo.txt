@@ -34,6 +34,12 @@ todo:
         https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
     music-service:
+        secure routes:
+            PUT: /api/Song/:id
+
+        hash authorId 
+            when a song needs to be edited the userid is passed along with the request  
+            if the userid matches the hashed authorid then the edit request is successful
         increase security of mongo instance (research)
         mock external db for tests (research)
         finish adding tests for all routes (depends on mock db)
@@ -61,13 +67,18 @@ todo:
                 add funciton to download song (depends on blochain service)
     
     user/authentication service:
-        hash user passwords for storage
-        set up mysql db
-        determine shape of user objects
-        
+        ensure every username is unique
+        https://auth0.com/docs/api/authentication?http#introduction
+        /login set up login route, POST, to accept username and password and retrun userid on successful login
+        how to determine if user already exists based on username and password 
+
     API Gateway:
         set up skeleton of gateway
-        determine which authenticaiton and authorization mechanism to use (research)
+        look into session hijacking prevention techniques (research)
+        Manage Sessions: https://evertpot.com/jwt-is-a-bad-default/
+            Sessions are created on user login
+            sessions only contain the userid of the user logged in
+            subsequent requests to other services need the user id included to authorize requests
 
     blockchain service:
         set up contract to hold songs by a single artists
