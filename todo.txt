@@ -36,10 +36,7 @@ todo:
     music-service:
         secure routes:
             PUT: /api/Song/:id
-
-        hash authorId 
-            when a song needs to be edited the userid is passed along with the request  
-            if the userid matches the hashed authorid then the edit request is successful
+            ensure that the only person that can edit a song is the author
         increase security of mongo instance (research)
         mock external db for tests (research)
         finish adding tests for all routes (depends on mock db)
@@ -67,13 +64,10 @@ todo:
                 add funciton to download song (depends on blochain service)
     
     user/authentication service:
-        ensure every username is unique
         https://auth0.com/docs/api/authentication?http#introduction
-        /login set up login route, POST, to accept username and password and retrun userid on successful login
-        how to determine if user already exists based on username and password 
 
     API Gateway:
-        set up skeleton of gateway
+        configure each service to only accept requests from API Gateway
         look into session hijacking prevention techniques (research)
         Manage Sessions: https://evertpot.com/jwt-is-a-bad-default/
             Sessions are created on user login
