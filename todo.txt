@@ -21,6 +21,8 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    add trust proxy to all express services
+    
     set up HTTPS
     
     create README
@@ -67,6 +69,8 @@ todo:
         https://auth0.com/docs/api/authentication?http#introduction
 
     API Gateway:
+        express' session middleware is not meant for production
+            - search for a compatible session store to pair with the middlware
         configure each service to only accept requests from API Gateway
         look into session hijacking prevention techniques (research)
         Manage Sessions: https://evertpot.com/jwt-is-a-bad-default/

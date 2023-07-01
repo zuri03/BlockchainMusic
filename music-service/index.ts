@@ -1,4 +1,5 @@
 import configureApp from './src/app.js';
+import { destroyS3BucketClient } from './src/clients/s3-client.js';
 
 (async function () {
     const app = await configureApp();
@@ -9,6 +10,11 @@ import configureApp from './src/app.js';
 
     const gracefulServerShutdown = function (signal: string) {
         console.log(`${signal} recieved, shutting down server`);
+
+        console.log('Shutting down s3 connections');
+        destroyS3BucketClient();
+
+        console.log('Shutting down API')
         server.close(() => {
             console.log('Server exiting...')
         });

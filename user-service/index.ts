@@ -17,5 +17,3 @@ import configureApp from './src/app.js';
     process.on('SIGTERM', () => gracefulServerShutdown('SIGTERM'));
     process.on('SIGINT', () => gracefulServerShutdown('SIGINT'));
 })();
-
- 
