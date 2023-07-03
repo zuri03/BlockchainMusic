@@ -73,6 +73,7 @@ todo:
             - search for a compatible session store to pair with the middlware
         configure each service to only accept requests from API Gateway
         look into session hijacking prevention techniques (research)
+        store flag in sessionStorage to show user is logged in
         Manage Sessions: https://evertpot.com/jwt-is-a-bad-default/
             Sessions are created on user login
             sessions only contain the userid of the user logged in

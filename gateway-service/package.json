@@ -4,7 +4,9 @@
   "description": "API Gateway",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "deploy": "npm run build && npm run start",
+    "start": "node ./build/index.js"
   },
   "author": "shawzuri1027@gmail.com",
   "license": "ISC",
@@ -12,6 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "http-proxy-middleware": "^2.0.6",
     "typescript": "^5.1.6"
   },
   "devDependencies": {

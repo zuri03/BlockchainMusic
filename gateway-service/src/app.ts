@@ -3,23 +3,25 @@ import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
 import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
+import loginRouter from './routes/login-routes';
 
 export default async function configureApp() : Promise<express.Application> {
 
     const app : express.Application = express();
 
     app.use(cors());
-
+    
     app.use(session({
         genid: (req) => crypto.randomUUID(),
         //resave may change in the future depending on session store
-        resave: false,
+        resave: true,
         secret: process.env.SESSION_SECRET!,
-        cookie: { sameSite: 'lax', secure: true },
+        //Set secure: true when changing to HTTPS
+        cookie: { sameSite: 'lax', secure: false },
         saveUninitialized: false,
         unset: 'destroy'
     }));
-    
+
     app.use(checkForUserid);
 
     //Simple and temporary request logger
