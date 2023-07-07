@@ -6,6 +6,7 @@ import {
 
 //If this function is called it is an internal server error, all other errors will be handled in the routes
 export const CustomErrorHandler = function (error: Error, request: Request, response: Response, next: NextFunction) {
+    console.log(error)
     if (response.headersSent) {
         return next(error);
     }
