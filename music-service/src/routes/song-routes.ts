@@ -8,10 +8,6 @@ import { ParsePagination } from '../middleware/middleware';
 
 const router: express.Router = express.Router();
 
-/*
-
-*/
-
 //GET
 router.get('/', ParsePagination, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 

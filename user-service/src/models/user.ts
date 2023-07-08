@@ -7,8 +7,8 @@ export default interface User {
 }
 
 /*
-music-service:
-    image: music-service
+song-service:
+    image: song-service
     environment:
        - MONGO_USERNAME=${MONGO_MUSIC_SERVICE_USERNAME}
        - MONGO_PASSWORD=${MONGO_MUSIC_SERVICE_PASSWORD}

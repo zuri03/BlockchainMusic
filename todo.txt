@@ -21,6 +21,8 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    standardize error and data resposnes from APIs
+    
     add trust proxy to all express services
     
     set up HTTPS
@@ -67,6 +69,7 @@ todo:
     
     user/authentication service:
         https://auth0.com/docs/api/authentication?http#introduction
+        add authorization header to request Authorization Basic username:password
 
     API Gateway:
         express' session middleware is not meant for production
