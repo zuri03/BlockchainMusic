@@ -4,13 +4,13 @@ import {
     Response, 
     NextFunction 
 } from 'express';
-import { ServicesProxyMiddleware } from '../middleware/proxy-functions';
+import { APIServicesProxyMiddleware } from '../middleware/proxy-functions';
 //import fetch from 'node-fetch';
 
 const router: Router = Router();
 
 //POST
-router.post('/login', ServicesProxyMiddleware, async (request: Request, response: Response, next: NextFunction) => {
+router.post('/login', APIServicesProxyMiddleware, async (request: Request, response: Response, next: NextFunction) => {
     console.log('now in login route')
     //if the user already has a userid they are already logged in
     /*

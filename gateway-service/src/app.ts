@@ -3,6 +3,10 @@ import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
 import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
+import {
+    APIServicesProxyMiddleware,
+    LoginProxyMiddleware
+} from './middleware/proxy-functions';
 import loginRouter from './routes/login-routes';
 
 export default async function configureApp() : Promise<express.Application> {
@@ -28,10 +32,17 @@ export default async function configureApp() : Promise<express.Application> {
     app.use((request, response, next) => {
         console.log(request.sessionID)
         console.log(`INFO: ${request.method}: URL: ${request.url}`);
-        next();
-    });
 
-    app.use(loginRouter);
+        //all non GET request require authentication
+        if (request.method !== 'GET' || request.path.includes('User')) {
+            console.log('ADDING AUTH HEADER')
+            request.headers['Authorization'] = `Basic ${request.session.userid}`;
+        } 
+
+        next();
+    }, APIServicesProxyMiddleware);
+
+    //app.use(loginRouter);
 
     //Error handler middleware function
     app.use(CustomErrorHandler);
