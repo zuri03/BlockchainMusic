@@ -21,10 +21,13 @@ declare module "express-session" {
     }
 }
 
-export const checkForUserid = function (error: Error, request: Request, response: Response, next: NextFunction) {
-    if (request.session.userid) {
-        next();
-    }
+export const checkForUserid = function (request: Request, response: Response, next: NextFunction) {
+    const isLoggedIn: boolean = request.session.userid !== undefined;
 
-    response.status(403).json({ 'error': 'please login first' });
+    if ((request.method !== 'GET' || request.path.includes('User')) && !isLoggedIn) {
+        response.status(403).json({ 'error': 'please login first' });
+        return;
+    }
+    
+    next();
 }   

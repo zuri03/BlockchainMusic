@@ -2,11 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
+import bodyParser from 'body-parser';
 import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
-import {
-    APIServicesProxyMiddleware,
-    LoginProxyMiddleware
-} from './middleware/proxy-functions';
+import { APIServicesProxyMiddleware, AuthenticationProxyMiddleware } from './middleware/proxy-functions';
 import loginRouter from './routes/login-routes';
 
 export default async function configureApp() : Promise<express.Application> {
@@ -25,12 +23,16 @@ export default async function configureApp() : Promise<express.Application> {
         saveUninitialized: true,
         unset: 'destroy'
     }));
-    
-    //app.use(checkForUserid);
+
+    app.use(loginRouter);
+
+    //body parser breaks the proxy
+    //app.use(bodyParser.json());
+
+    app.use(checkForUserid);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {
-        console.log(request.sessionID)
         console.log(`INFO: ${request.method}: URL: ${request.url}`);
 
         //all non GET request require authentication
@@ -41,8 +43,6 @@ export default async function configureApp() : Promise<express.Application> {
 
         next();
     }, APIServicesProxyMiddleware);
-
-    //app.use(loginRouter);
 
     //Error handler middleware function
     app.use(CustomErrorHandler);
