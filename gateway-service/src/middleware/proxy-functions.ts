@@ -27,8 +27,14 @@ const resourceToContainerNameMap: { [Resource: string]: string | undefined }  = 
 
 export const APIServicesProxyMiddleware = createProxyMiddleware({
     changeOrigin: true,
+    router: {
+        '/api/Song'                      : 'http://song-container:8888',   // path only
+        '/api/User'                      : 'http://user-contianer:8008'   // path only
+    },
+    /*
     router: (request): string => {
-
+        console.log('request.url')
+        console.log(`${request.protocol}://${request.hostname}${request.path}`)
         //pull out the request resource for now it is either 'User' or 'Song'
         // ie /api/Song/Search/:searchTerm
         const requestedResource: string = request.path.split("/")[2];
@@ -37,26 +43,24 @@ export const APIServicesProxyMiddleware = createProxyMiddleware({
         //if they request a resource that does not exist destroy the request
         if (!hostAndPort) {
             console.log('ROUTER DESTROYING REQUEST');
-            //request.destroy();
-            return request.url;
+            request.destroy();
+            return `${request.protocol}://${request.hostname}${request.path}`
         }
 
         console.log('ROUTER RETURNED ' + `http://${hostAndPort!}${request.path}`);
-
         return `http://${hostAndPort!}${request.path}`;
     },
-    onProxyReq: (proxyReq, request: Request, response: Response) => {
-        //console.log('proxy request url ' + proxyReq.req.url)
-        //if the request is destroyed then a they requested a resource that does not exist
-        if (request.destroyed) {
-            console.log('DESTROYED REQUEST RETURN NOT FOUND')
-            proxyReq.destroy();
-            response.status(400).json({ 'error': 'not found' });
-            return;
-        }
+   
+    onProxyReq: (proxyReq, req, res) => {
+        console.log('onProxyReq')
+        console.log('Req')
+        console.log(req.url)
+        console.log(req.path)
+        console.log('ProxyReq')
+        console.log(proxyReq.path)
     },
+     */
     onProxyRes: (proxyRes, request: Request, response: Response) => {
-        console.log('ON PROXY RES');
 
         let incomingMessageData = '';
 

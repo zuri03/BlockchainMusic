@@ -11,7 +11,7 @@ export const CustomErrorHandler = function (error: Error, request: Request, resp
         return next(error);
     }
 
-    response.status(500).json({ 'error': error.message })
+    response.status(500).json({ 'error': 'internal server error' })
 }   
 
 //augment the session module
