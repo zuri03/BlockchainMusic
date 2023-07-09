@@ -5,7 +5,7 @@
   "main": "./build",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build --force ./tsconfig.json",
     "deploy": "npm run build && npm run start",
     "start": "node ./build/index.js"
   },

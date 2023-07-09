@@ -2,9 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
-import bodyParser from 'body-parser';
 import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
-import { APIServicesProxyMiddleware, AuthenticationProxyMiddleware } from './middleware/proxy-functions';
+import { APIServicesProxyMiddleware } from './middleware/proxy-functions';
 import loginRouter from './routes/login-routes';
 
 export default async function configureApp() : Promise<express.Application> {

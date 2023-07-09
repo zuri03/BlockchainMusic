@@ -22,31 +22,6 @@ architecture:
             - serves HTML, CSS and JS files to the user
 todo:
 
-user-service:
-    image: user-service
-    build:
-      context: ./user-service/.
-      dockerfile: ./Dockerfile
-    environment:
-      - MONGO_USERNAME=${MONGO_USER_SERVICE_USERNAME}
-      - MONGO_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
-      - MONGO_DB_NAME=${INIT_DATABASE}
-    ports:
-      - '8008:8008'
-    container_name: user-container
-    restart: unless-stopped
-
-  user-mongo:
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${INIT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${INIT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${INIT_DATABASE}
-      - MONGO_USER_SERVICE_USERNAME=${MONGO_USER_SERVICE_USERNAME}
-      - MONGO_USER_SERVICE_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
-    volumes:
-      - ./scripts/user-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
     change all references of music service to song service
 
     standardize error and data resposnes from APIs
@@ -115,3 +90,32 @@ user-service:
         set up skeleton of offchain part of this service
         add tests to blockchain-service
         create dockerfile for offchain part of blockchain service
+
+
+         song-service:
+    image: song-service
+    environment:
+       - MONGO_USERNAME=${MONGO_MUSIC_SERVICE_USERNAME}
+       - MONGO_PASSWORD=${MONGO_MUSIC_SERVICE_PASSWORD}
+       - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
+       - AWS_BUCKET_REGION=${AWS_BUCKET_REGION}
+       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+    build:
+      context: ./music-service/.
+      dockerfile: ./Dockerfile
+    ports:
+      - '8888:8888'
+    depends_on:
+      - music-mongo
+    container_name: song-container
+    restart: unless-stopped
+
+  song-mongo:
+    image: mongo:latest
+    env_file:
+      - .env
+    volumes:
+      - ./scripts/music-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  
