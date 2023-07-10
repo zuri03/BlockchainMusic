@@ -27,7 +27,7 @@ export const APIServicesProxyMiddleware = createProxyMiddleware({
 });
 
 export const AuthenticationProxyMiddleware = createProxyMiddleware({
-    target: 'http://localhost:8008/auth',//'http://user-container:8008/auth',
+    target: 'http://user-container:8008/auth',//'http://localhost:8008/auth',//
     changeOrigin: true,
     //remove the path entirely, since the request is going to /auth and the request is to /auth the resulting 
     //proxy request will be to /auth/auth

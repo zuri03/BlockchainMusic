@@ -4,31 +4,19 @@ import {
     Response, 
     NextFunction 
 } from 'express';
-import { AuthenticationProxyMiddleware } from '../middleware/proxy-functions';
-//import fetch from 'node-fetch';
+//import { AuthenticationProxyMiddleware } from '../middleware/proxy-functions';
+import fetch from 'node-fetch';
 
 const router: Router = Router();
 
+interface APIResponse {
+    [key: string]: string | undefined,
+    data: string | undefined,
+    error: string | undefined
+}
+
 //POST
-router.post('/login', AuthenticationProxyMiddleware, async (request: Request, response: Response, next: NextFunction) => {
-    console.log('now in login route');
-
-    console.log(response.locals.err)
-    if (response.locals.err) {
-        response.status(response.locals.status || 500).json({ 'error': response.locals.err });
-        return;
-    }
-
-    console.log(response.locals.id)
-    if (!response.locals.id) {
-        response.status(500).json({ 'error': 'internal server error' });
-        return;
-    }
-
-    console.log('got resposne.local.id ' + response.locals.id)
-    request.session.userid = response.locals.id;
-    response.status(200).json({ 'data' : 'success' })
-    /*
+router.post('/login', async (request: Request, response: Response, next: NextFunction) => {
     //if the user already has a userid they are already logged in
     if (request.session.userid) {
         //return error or skip this function
@@ -45,24 +33,41 @@ router.post('/login', AuthenticationProxyMiddleware, async (request: Request, re
         response.status(400).json(responseBody);
         return;
     }
-    
-    console.log('about to do next call')
-    //next is the proxy function that will forward the request to the user service and save
-    //the response to the response.locals
-    next();
 
-    console.log('out of next call')
-    console.log(response.locals.id)
-    //now pull the userid from response.locals
-    request.session.userid = response.locals.id;
+    try {
 
-    //now save the session
-    request.session.save();
+        console.log('about to call user service');
 
-    console.log('saved session')
-    //if user service returns userid store id in user session and return 200 response to client
-    response.status(200).json({ 'data': 'success' });
-    */
+        const userServiceResponse = await fetch('http://user-container:8008/auth', {
+            method: 'post',
+            body: JSON.stringify(request.body),
+            headers: { 'Content-Type': 'application-json' }
+        });
+
+        const responseData: APIResponse = await userServiceResponse.json() as APIResponse;
+
+        console.log('got response ');
+        console.log(responseData);
+
+        //First check if an error occurred
+        if (responseData['error']) {
+            //log error
+            console.log(responseData['error']);
+            response.status(userServiceResponse.status).json({ 'error': 'error occurred during login' });
+            return;
+        }
+
+        //update and save the session
+        request.session.userid = responseData['data'];
+        request.session.save();
+
+        console.log('saved session userid is now ');
+
+        console.log(request.session.userid);
+        response.status(200).json({ 'data': 'success' });
+    } catch (error) {
+        next(error);
+    }
 });
 
 export default router;

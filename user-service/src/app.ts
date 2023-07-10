@@ -8,7 +8,7 @@ import { connectToDatabase } from './db/database';
 
 export default async function configureApp() : Promise<express.Application> {
 
-    //await connectToDatabase();
+    await connectToDatabase();
 
     const app : express.Application = express();
 
@@ -20,7 +20,7 @@ export default async function configureApp() : Promise<express.Application> {
         next();
     });
 
-    //app.use(bodyParser.json());
+    app.use(bodyParser.json());
 
     app.use('/auth', authenticationRouter);
 
