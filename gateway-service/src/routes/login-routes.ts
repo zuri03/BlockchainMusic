@@ -24,7 +24,20 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
         return;
     }
     
-    const { username, password } = request.body;
+    //const { username, password } = request.body;
+    if (!request.get('authorization')) {
+        response.status(403).json({ 'error': 'missing auth credentials' });
+        return;
+    }
+
+    console.log('auth header in login route: ' + request.get('authorization'));
+
+    const authorizationHeader: string = request.get('authorization')!;
+
+    //Basic username:password
+    const [ username, password ] = authorizationHeader.split(" ")[1].split(":");
+
+    console.log('got username and password ' + username + " : " + password)
 
     if (!username || !password) {
         const responseBody = { 
@@ -40,8 +53,7 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
 
         const userServiceResponse = await fetch('http://user-container:8008/auth', {
             method: 'post',
-            body: JSON.stringify(request.body),
-            headers: { 'Content-Type': 'application-json' }
+            headers: { 'Content-Type': 'application-json', 'Authorization': `Basic ${username}:${password}` }
         });
 
         const responseData: APIResponse = await userServiceResponse.json() as APIResponse;

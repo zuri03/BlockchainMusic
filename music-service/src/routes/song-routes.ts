@@ -1,10 +1,13 @@
 import express from 'express';
 import Song from '../models/song';
 import { Paging, PaginatedResult } from '../models/pagination';
-import { AuthorizeRequest } from '../middleware/middleware';
+import { 
+  AuthorizeRequest, 
+  ParsePagination, 
+  checkForAuthorizationHeader 
+} from '../middleware/middleware';
 import { collections } from '../db/db';
 import { ObjectId } from 'mongodb';
-import { ParsePagination } from '../middleware/middleware';
 
 const router: express.Router = express.Router();
 
@@ -86,7 +89,8 @@ router.get('/Search/:searchTerm', ParsePagination, async (request: express.Reque
 
 //POST
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-  try{
+  try {
+
     const {
       title,
       author,
@@ -124,13 +128,20 @@ router.post('/', async (request: express.Request, response: express.Response, ne
 });
 
 //DELETE
-router.delete("/:id", async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.delete("/:id", checkForAuthorizationHeader, AuthorizeRequest, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
 
   const id: string = request.params.id;
 
   try {
     const mongoQuery = {  _id: new ObjectId(id) };
-    const deletedSong = await collections.songs!.findOne(mongoQuery);
+
+    let deletedSong: Song;
+    if (!response.locals.song) {
+      deletedSong = await collections.songs!.findOne(mongoQuery) as Song;
+    } else {
+      deletedSong = response.locals.song
+    }
+
     const deletetionResult = await collections.songs!.deleteOne(mongoQuery);
 
     if (!deletetionResult) {
@@ -150,7 +161,7 @@ router.delete("/:id", async (request: express.Request, response: express.Respons
 });
 
 //PUT
-router.put("/:id", AuthorizeRequest, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.put("/:id", checkForAuthorizationHeader, AuthorizeRequest, async (request: express.Request, response: express.Response, next: express.NextFunction) => {
   try{
     const id: string = request.params.id;
 
@@ -163,8 +174,14 @@ router.put("/:id", AuthorizeRequest, async (request: express.Request, response: 
       response.status(400).json(responseBody);
       return;
     }
+    
+    let song: Song;
+    if (!response.locals.song) {
+      song = await collections.songs!.findOne({ _id: new ObjectId(id) }) as Song;
+    } else {
+      song = response.locals.song
+    }
 
-    const song: Song = response.locals.song;
     song.title = title;
     song.description = description;
 

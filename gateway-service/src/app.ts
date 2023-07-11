@@ -28,19 +28,24 @@ export default async function configureApp() : Promise<express.Application> {
     //body parser breaks the proxy
     //app.use(bodyParser.json());
 
-    app.use(checkForUserid);
+    //move checking userid logic to the individual services
+    //app.use(checkForUserid)
 
     //Simple and temporary request logger
     app.use((request, response, next) => {
-        console.log(`INFO: ${request.method}: URL: ${request.url}`);
+        console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: ${request.session.userid}`);
 
         //all non GET request require authentication
         if (request.method !== 'GET' || request.path.includes('User')) {
-            console.log('ADDING AUTH HEADER')
-            request.headers['Authorization'] = `Basic ${request.session.userid}`;
+            console.log('ADDING AUTH HEADER');
+            
+            request.headers.authorization = `Basic ${request.session.userid}`;
+
+            console.log('Auth header ' + request.get('authorization'))
         } 
 
         next();
+
     }, APIServicesProxyMiddleware);
 
     //Error handler middleware function

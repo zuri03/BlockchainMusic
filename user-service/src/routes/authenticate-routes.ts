@@ -6,13 +6,25 @@ const router: express.Router = express.Router();
 
 //POST
 router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    const { username, password } = request.body;
+    
+    if (!request.get('authorization')) {
+        response.status(403).json({ 'error': 'missing auth credentials headers' });
+        return;
+    }
+
+    console.log('auth header in authorization route: ' + request.get('authorization'));
+
+    const authorizationHeader: string = request.get('authorization')!;
+
+    //Basic username:password
+    const [ username, password ] = authorizationHeader.split(" ")[1].split(":");
+
+    console.log('got username and password ' + username + " : " + password)
 
     if (!username || !password) {
         const responseBody = { 
-            'error': `one or more required values missing from request body` 
+            'error': `one or more required values missing from header` 
         }
-        console.log(responseBody)
         response.status(400).json(responseBody);
         return;
     }

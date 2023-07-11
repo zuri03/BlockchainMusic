@@ -21,26 +21,55 @@ export const CustomErrorHandler = function (error: Error, request: Request, resp
     response.status(500).json({ 'error': error.message })
 }   
 
+export const checkForAuthorizationHeader = function (request: Request, response: Response, next: NextFunction) {
+    console.log('in  check authorization middleware')
+    if (!request.get('authorization')) {
+        response.status(403).json({ 'error': 'authorization headers missing' });
+        return;
+    }
+
+    console.log('pulling authorization header ' + request.get('authorization'));
+
+    const requestUserId: string = request.get('authorization')!.split(" ")[1];
+
+    if (!requestUserId) {
+        response.status(403).json({ 'error': 'values missing from auth header' });
+        return;
+    }
+
+    console.log(`userid set to locals is ${requestUserId}`)
+    response.locals.userid = requestUserId;
+
+    console.log('calling next')
+    next();
+}
+
 export const AuthorizeRequest = async function (request: Request, response: Response, next: NextFunction) {
+
+    //at this point we can assume the authorization header is present due to previous middleware
+    const authorId: string = request.get('authorization')!.split(" ")[1];
+    
+    console.log(`Auth middleware got ${authorId}`);
+
     const id = request.params.id;
-    const { authorId } = request.body;
 
     if (!id || !authorId) {
         response.status(400).json({ 'error': 'id or authorid is missing from request' });
         return;
     }
 
-    const mongoQuery = { _id: new ObjectId(id) };
-    const song = await collections.songs!.findOne(mongoQuery);
-
-    if (!song) {
-        response.status(404).json({ 'error': `Song with id ${id} not found` });
-        return;
-    }
-
     try {
-        const authorIdHash = await bcrypt.hash(authorId, SALT_ROUNDS);
-        const authorized = await bcrypt.compare(song.authorId, authorIdHash);
+
+        const mongoQuery = { _id: new ObjectId(id) };
+        const song = await collections.songs!.findOne(mongoQuery);
+
+        if (!song) {
+            response.status(404).json({ 'error': `Song with id ${id} not found` });
+            return;
+        }
+
+        //for now authorid is stored in plain text
+        const authorized = authorId === song.authorId
 
         if (!authorized) {
             response.status(401).json({ 'error': `Not authorized to modify this resource` });
