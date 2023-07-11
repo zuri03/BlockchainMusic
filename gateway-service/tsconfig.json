@@ -1,10 +1,14 @@
 {
     "exclude": [ "./build", "test" ],
     "compilerOptions": {
+        "lib": ["ES2022"],
         "types": [ "node", "express" ], 
-        "target": "ES6",   
+        "target": "ES2022",   
         "moduleResolution": "node",
+        //"module": "commonjs",
         "module": "commonjs",
+        //this option should get node-fetch to work
+        "allowSyntheticDefaultImports": true,
         "rootDir": ".", 
         "outDir": "./build", 
         "esModuleInterop": true,   

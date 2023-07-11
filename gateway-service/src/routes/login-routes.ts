@@ -35,7 +35,7 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
     }
 
     try {
-
+        
         console.log('about to call user service');
 
         const userServiceResponse = await fetch('http://user-container:8008/auth', {
