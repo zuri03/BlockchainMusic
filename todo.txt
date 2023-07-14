@@ -57,8 +57,6 @@ todo:
         use a cache to improve speed of requests (research)
         cache the totalCount so that an extra db query is not needed on every request
         properly configure CORS
-        Look into creating custom client to interact with S3 rest api (research)
-            - this would allow me to remove the @aws-sdk/client-s3 dependency
 
     static file server: 
         improve the look of each page and the site theme
@@ -85,6 +83,9 @@ todo:
         https://evertpot.com/jwt-is-a-bad-default/
 
     blockchain service:
+        create and configure DynamoDB instance 
+        create DynamoDB client using AWS sdk https://www.npmjs.com/package/@aws-sdk/client-dynamodb
+        create rest API for interacting with blockchain service
         securing data stored in smart contracts (research)
         using ganache and truffle for development (research)
 
