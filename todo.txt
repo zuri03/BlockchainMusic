@@ -1,14 +1,23 @@
 General Idea:
 Blockchain spotify
     - store hashes of music files in a smart contract
-    - ensure that users must tip artists before getting data for a song
+    - ensure that users must author artists before getting data for a song
     - have an offchain service for allowing an artist to create a new account 
         - with each new account a new contract is deployed to the network with all of the artists songs and funds
 
 architecture:
     - multiple individual services (probably microservices pattern)
         - blockchain service
-            - contains contracts 
+            - Two Parts 
+                - On Contract services  
+                    - series of smart contracts that store music data
+                    - data is compressed and stored in a map
+                    - contract must offer create, read, delete functionality
+                - off contract services 
+                    - epxose API for uploading new songs
+                        -API must provide create and delete functionality
+                    - maintain a database of metadata about the contracts deployed 
+                        - key/value store: key = userid, value = smart contract address containing songs
         - authentication service:
             This service will only store metadata about users to allow for authentication
         - api gateway:
@@ -21,6 +30,8 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    configure each service to only accept requests from API Gateway
+
     standardize error and data resposnes from APIs
     
     add trust proxy to all express services
@@ -38,14 +49,11 @@ todo:
         https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
     song-service:
-        secure routes:
-            PUT: /api/Song/:id
-            ensure that the only person that can edit a song is the author
         increase security of mongo instance (research)
         mock external db for tests (research)
         finish adding tests for all routes (depends on mock db)
         add a input handling/cleaning library 
-        imporve security of docker container (research)
+        improve security of docker container (research)
         use a cache to improve speed of requests (research)
         cache the totalCount so that an extra db query is not needed on every request
         properly configure CORS
@@ -69,24 +77,16 @@ todo:
     
     user/authentication service:
         https://auth0.com/docs/api/authentication?http#introduction
-        add authorization header to request Authorization Basic username:password
 
     API Gateway:
         express' session middleware is not meant for production
-            - search for a compatible session store to pair with the middlware
-        configure each service to only accept requests from API Gateway
+            - search for a compatible session store to pair with the middlware (research)
         look into session hijacking prevention techniques (research)
-        store flag in sessionStorage to show user is logged in
-        Manage Sessions: https://evertpot.com/jwt-is-a-bad-default/
-            Sessions are created on user login
-            sessions only contain the userid of the user logged in
-            subsequent requests to other services need the user id included to authorize requests
+        https://evertpot.com/jwt-is-a-bad-default/
 
     blockchain service:
-        set up contract to hold songs by a single artists
-        set up skeleton of offchain part of this service
-        add tests to blockchain-service
-        create dockerfile for offchain part of blockchain service
+        securing data stored in smart contracts (research)
+        using ganache and truffle for development (research)
 
 
          
