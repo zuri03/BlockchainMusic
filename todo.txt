@@ -22,8 +22,6 @@ architecture:
             - serves HTML, CSS and JS files to the user
 todo:
 
-    add proper resopnses for unsupported endpoints and operations
-
     change all references of music service to song service
 
     standardize error and data resposnes from APIs

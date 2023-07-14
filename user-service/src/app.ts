@@ -26,6 +26,11 @@ export default async function configureApp() : Promise<express.Application> {
 
     app.use('/api/User', userRouter);
 
+    app.use((request, response, next) => {
+        response.status(404).json({ 'error': 'unsupported route'});
+        return;
+    });
+
     app.use(CustomErrorHandler);
 
     return app;

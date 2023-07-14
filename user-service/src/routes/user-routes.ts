@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { collections } from '../db/database';
 import { ObjectId } from 'mongodb';
@@ -6,10 +6,21 @@ import User from '../models/user';
 
 const SALT_ROUNDS = 10;
 
-const router: express.Router = express.Router();
+const router: Router = Router();
+
+router.use((request: Request, response: Response, next: NextFunction) => {
+  const method: string = request.method;
+
+  if (![ 'GET', 'POST' ].includes(method)) {
+    response.status(405).json({ 'error': 'method not supported' });
+    return;
+  }
+
+  next();
+});
 
 //GET
-router.get('/:id', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.get('/:id', async (request: Request, response: Response, next: NextFunction) => {
 
     const id: string | undefined = request.params.id;
 
@@ -34,12 +45,12 @@ router.get('/:id', async (request: express.Request, response: express.Response, 
 
       response.json({ 'data': user });
     } catch (error) {
-        next(error);
+      next(error);
     }
 });
 
 //POST
-router.post('/', async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+router.post('/', async (request: Request, response: Response, next: NextFunction) => {
     
   const { username, password } = request.body;
 

@@ -20,7 +20,7 @@ router.use((request: Request, response: Response, next: NextFunction) => {
   }
 
   next();
-})
+});
 
 //GET
 router.get('/', ParsePagination, async (request: Request, response: Response, next: NextFunction) => {
