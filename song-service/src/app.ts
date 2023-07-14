@@ -45,10 +45,10 @@ export default async function configureApp() : Promise<express.Application> {
 }
 
 /*
-GET: /Song: Gets info on all music available (will need pagination),
+GET: /Song: Gets info on all songs available (will need pagination),
 GET: /Song/<id>: Gets information for a specific song
-GET: /Song/Search/<searchTerm>: Gets all music where the title matches the serach term
-POST: /Song: Adds new music to the DB
+GET: /Song/Search/<searchTerm>: Gets all songs where the title matches the serach term
+POST: /Song: Adds a new song to the DB
 {
     'id': <id>
     'title': 'example', //song title
@@ -57,6 +57,6 @@ POST: /Song: Adds new music to the DB
     'coverURL': <coverURL>, //url of the cover 
     'createdAt': <datetime>, //datetime created on the server
 }
-DELETE: /Song/<id>: Deletes music from the db
+DELETE: /Song/<id>: Deletes a song from the db
 */
  

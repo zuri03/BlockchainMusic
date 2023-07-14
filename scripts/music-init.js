@@ -1,6 +1,6 @@
 db.createUser({
-    user: encodeURIComponent(process.env.MONGO_MUSIC_SERVICE_USERNAME),
-    pwd: encodeURIComponent(process.env.MONGO_MUSIC_SERVICE_PASSWORD),
+    user: encodeURIComponent(process.env.MONGO_SONG_SERVICE_USERNAME),
+    pwd: encodeURIComponent(process.env.MONGO_SONG_SERVICE_PASSWORD),
     roles : [{ role: 'readWrite', db: 'songs' }]
 });
 

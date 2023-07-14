@@ -16,14 +16,11 @@ architecture:
             serves as a proxy/filter for the other services 
                 needs to be highly secure and performant
             keeps track of session
-        - music service:
+        - song service:
             - rest api that manages metadata about songs
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
-
-    change all references of music service to song service
-
     standardize error and data resposnes from APIs
     
     add trust proxy to all express services
@@ -40,7 +37,7 @@ todo:
     s3 security practices
         https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
-    music-service:
+    song-service:
         secure routes:
             PUT: /api/Song/:id
             ensure that the only person that can edit a song is the author

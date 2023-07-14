@@ -1,7 +1,7 @@
 {
-  "name": "music-service",
+  "name": "song-service",
   "version": "1.0.0",
-  "description": "A rest api providing information on music uploaded to the system",
+  "description": "A rest api providing information on songs uploaded to the system",
   "main": "./build",
   "type": "commonjs",
   "scripts": {
