@@ -33,6 +33,11 @@ export default async function configureApp() : Promise<express.Application> {
     app.use('/api/Song', bodyParser.json(), songRouter);
     app.use('/api/Cover', upload.single('cover-file'), coverRouter);
 
+    app.use((request, response, next) => {
+        response.status(404).json({ 'error': 'unsupported route'});
+        return;
+    })
+
     //Error handler middleware function
     app.use(CustomErrorHandler);
 

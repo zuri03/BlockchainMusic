@@ -1,11 +1,18 @@
-//API routes for handling images from form data
-/*
-POST: /api/cover
-*/
 import { Router, Request, Response, NextFunction } from 'express';
 import { UploadCoverFile } from '../clients/s3-client';
 
 const router: Router = Router();
+
+router.use((request: Request, response: Response, next: NextFunction) => {
+    const method: string = request.method;
+
+    if (method !== 'POST') {
+        response.status(405).json({ 'error': 'method not supported' });
+        return;
+    }
+
+    next();
+});
 
 router.post("/", async (request: Request, response: Response, next: NextFunction) => {
     const file: Express.Multer.File | undefined = request.file;
@@ -15,7 +22,7 @@ router.post("/", async (request: Request, response: Response, next: NextFunction
         return;
     }
 
-    try{
+    try {
         //send file to s3 bucket client
         const resourceURL: string = await UploadCoverFile(file);
 

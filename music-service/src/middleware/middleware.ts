@@ -18,7 +18,9 @@ export const CustomErrorHandler = function (error: Error, request: Request, resp
         return next(error);
     }
 
-    response.status(500).json({ 'error': error.message })
+    console.log(error);
+
+    response.status(500).json({ 'error':'internal server error' });
 }   
 
 export const checkForAuthorizationHeader = function (request: Request, response: Response, next: NextFunction) {

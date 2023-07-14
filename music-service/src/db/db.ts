@@ -29,6 +29,6 @@ export async function connectToDatabase() {
     collections.songs = songsCollection;
 
     console.log(
-        `Successfully connected to database: ${db.databaseName} and collection: ${songsCollection.collectionName}`,
+        `Successfully connected to database: ${db.databaseName} and collection: ${songsCollection.collectionName}`
     );
 }
