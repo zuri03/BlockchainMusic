@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import addressRouter from './routes/address-routes';
+import { customErrorHandler } from './middleware/middleware-functions';
 
 export default function configureApp(): express.Application {
 
@@ -15,6 +17,10 @@ export default function configureApp(): express.Application {
     });
 
     app.use(bodyParser.json());
+
+    app.use('/api/address', addressRouter)
+
+    app.use(customErrorHandler);
 
     return app;
 }

@@ -22,31 +22,31 @@ router.use((request: Request, response: Response, next: NextFunction) => {
 //GET
 router.get('/:id', async (request: Request, response: Response, next: NextFunction) => {
 
-    const id: string | undefined = request.params.id;
+  const id: string | undefined = request.params.id;
 
-    if (!id) {
-      //bad request
-      response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
-      return; 
+  if (!id) {
+    //bad request
+    response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
+    return; 
+  }
+
+  try{
+
+    const mongoQuery = { _id: new ObjectId(id) };
+
+    //search db based on id
+    const user = await collections.users!.findOne(mongoQuery);
+
+    if (!user) {
+      //not found
+      response.status(404).json({ 'error': `User with id ${id} not found` });
+      return;
     }
 
-    try{
-
-      const mongoQuery = { _id: new ObjectId(id) };
-
-      //search db based on id
-      const user = await collections.users!.findOne(mongoQuery);
-
-      if (!user) {
-        //not found
-        response.status(404).json({ 'error': `User with id ${id} not found` });
-        return;
-      }
-
-      response.json({ 'data': user });
-    } catch (error) {
-      next(error);
-    }
+    response.json({ 'data': user });
+  } catch (error) {
+    next(error);
+  }
 });
 
 //POST
