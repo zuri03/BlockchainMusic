@@ -1,11 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { checkAndValidateAuthorizationHeader, authorizeReqest } from '../middleware/middleware-functions';
 import { dynamo } from '../db/dynamo-db';
 
 const router: Router = Router();
 
 //POST
 //Create a new entry in db and deploy a new smart contract for the user
-router.post('/', async (request: Request, response: Response, next: NextFunction) => {
+router.post('/', checkAndValidateAuthorizationHeader, authorizeReqest, async (request: Request, response: Response, next: NextFunction) => {
 
     const { userid } = request.body;
 
@@ -61,7 +62,7 @@ router.get('/:userid', async (request: Request, response: Response, next: NextFu
 });  
 
 //DELETE 
-router.delete('/:userid', async (request: Request, response: Response, next: NextFunction) => {
+router.delete('/:userid', checkAndValidateAuthorizationHeader, authorizeReqest, async (request: Request, response: Response, next: NextFunction) => {
     const userid: string | undefined = request.params.userid;
 
     if (!userid) {

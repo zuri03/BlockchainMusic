@@ -24,13 +24,10 @@ export const CustomErrorHandler = function (error: Error, request: Request, resp
 }   
 
 export const checkForAuthorizationHeader = function (request: Request, response: Response, next: NextFunction) {
-    console.log('in  check authorization middleware')
     if (!request.get('authorization')) {
         response.status(403).json({ 'error': 'authorization headers missing' });
         return;
     }
-
-    console.log('pulling authorization header ' + request.get('authorization'));
 
     const requestUserId: string = request.get('authorization')!.split(" ")[1];
 
@@ -39,10 +36,9 @@ export const checkForAuthorizationHeader = function (request: Request, response:
         return;
     }
 
-    console.log(`userid set to locals is ${requestUserId}`)
+    //setting it to the locals may not be necessary
     response.locals.userid = requestUserId;
 
-    console.log('calling next')
     next();
 }
 
@@ -50,8 +46,6 @@ export const AuthorizeRequest = async function (request: Request, response: Resp
 
     //at this point we can assume the authorization header is present due to previous middleware
     const authorId: string = request.get('authorization')!.split(" ")[1];
-    
-    console.log(`Auth middleware got ${authorId}`);
 
     const id = request.params.id;
 
