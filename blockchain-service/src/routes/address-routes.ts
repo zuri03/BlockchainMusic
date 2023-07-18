@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { checkAndValidateAuthorizationHeader, authorizeReqest } from '../middleware/middleware-functions';
 import { dynamo } from '../db/dynamo-db';
+import SmartContractDeployer from '../deployer/deployer';
 
 const router: Router = Router();
 
@@ -26,6 +27,8 @@ router.post('/', checkAndValidateAuthorizationHeader, authorizeReqest, async (re
         }
 
         //deploy a new smart contract
+        //const smartContractDeployer: SmartContractDeployer = SmartContractDeployer.getDeployerInstance();
+        //const smartContractAddress: string = smartContractDeployer.deploySmartContract();
 
         //create a new entry key: userid, value: contract address
         await dynamo.createDBEntry(userid, 'placeholder address');
@@ -47,7 +50,6 @@ router.get('/:userid', async (request: Request, response: Response, next: NextFu
     }
 
     try {
-
         const result = await dynamo.getDBEntry(userid!);
 
         if (!result) {

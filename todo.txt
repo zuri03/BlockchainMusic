@@ -30,6 +30,8 @@ architecture:
         - static file server:
             - serves HTML, CSS and JS files to the user
 todo:
+    set up production configuration for each service
+
     configure each service to only accept requests from API Gateway
 
     standardize error and data resposnes from APIs
@@ -77,17 +79,14 @@ todo:
         https://auth0.com/docs/api/authentication?http#introduction
 
     API Gateway:
-        express' session middleware is not meant for production
+        express' session middleware is not meant for production (product configuration)
             - search for a compatible session store to pair with the middlware (research)
         look into session hijacking prevention techniques (research)
         https://evertpot.com/jwt-is-a-bad-default/
 
     blockchain service:
-        create and configure DynamoDB instance 
-        create DynamoDB client using AWS sdk https://www.npmjs.com/package/@aws-sdk/client-dynamodb
-        create rest API for interacting with blockchain service
         securing data stored in smart contracts (research)
-        using ganache and truffle for development (research)
+        hash userid for dynamodb
 
 
          
