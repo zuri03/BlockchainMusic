@@ -105,12 +105,10 @@ export const ParsePagination = async function (request: Request, response: Respo
     }
 
     try {
-        const documentCount = await collections.songs!.estimatedDocumentCount();
 
         response.locals.paging = {
             offset: offset,
-            pageSize,
-            totalCount: documentCount
+            pageSize
         }
 
         next();

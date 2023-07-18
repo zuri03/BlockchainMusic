@@ -28,6 +28,9 @@ router.get('/', ParsePagination, async (request: Request, response: Response, ne
   const paging: Paging = response.locals.paging as Paging;
 
   try {
+    const count = await collections.songs!.countDocuments({});
+    paging.totalCount = count;
+
     const songs = await collections.songs!.find({})
       .sort({ title: 1})
       .skip(paging.offset)
@@ -83,6 +86,9 @@ router.get('/Search/:searchTerm', ParsePagination, async (request: Request, resp
         { title: { $regex: `^${searchTerm}`, $options: 'i' } }
       ] 
     }
+
+    const count = await collections.songs!.countDocuments(mongoQuery);
+    paging.totalCount = count;
 
     const songs = await collections.songs!.find(mongoQuery)
       .sort({ title: 1})

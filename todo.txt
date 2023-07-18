@@ -33,10 +33,6 @@ todo:
     set up production configuration for each service
 
     configure each service to only accept requests from API Gateway
-
-    standardize error and data resposnes from APIs
-    
-    add trust proxy to all express services
     
     set up HTTPS
     
@@ -54,7 +50,7 @@ todo:
         increase security of mongo instance (research)
         mock external db for tests (research)
         finish adding tests for all routes (depends on mock db)
-        add a input handling/cleaning library 
+        add a input handling/cleaning library (express-validator)
         improve security of docker container (research)
         use a cache to improve speed of requests (research)
         cache the totalCount so that an extra db query is not needed on every request
