@@ -1,6 +1,10 @@
 import configureApp from './src/app.js';
 
 (async function () {
+
+    if (!process.env.API_KEY) {
+        throw new Error("Key not defined in the environment");
+    }
     
     const app = await configureApp();
 

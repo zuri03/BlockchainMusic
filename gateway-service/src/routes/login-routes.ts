@@ -4,7 +4,6 @@ import {
     Response, 
     NextFunction 
 } from 'express';
-//import { AuthenticationProxyMiddleware } from '../middleware/proxy-functions';
 import fetch from 'node-fetch';
 
 const router: Router = Router();
@@ -30,14 +29,10 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
         return;
     }
 
-    console.log('auth header in login route: ' + request.get('authorization'));
-
     const authorizationHeader: string = request.get('authorization')!;
 
     //Basic username:password
     const [ username, password ] = authorizationHeader.split(" ")[1].split(":");
-
-    console.log('got username and password ' + username + " : " + password)
 
     if (!username || !password) {
         const responseBody = { 
@@ -48,18 +43,17 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
     }
 
     try {
-        
-        console.log('about to call user service');
 
         const userServiceResponse = await fetch('http://user-container:8008/auth', {
             method: 'post',
-            headers: { 'Content-Type': 'application-json', 'Authorization': `Basic ${username}:${password}` }
+            headers: { 
+                'Content-Type': 'application-json', 
+                'Authorization': `Basic ${username}:${password}`,
+                'API-KEY': process.env.API_KEY! 
+            }
         });
 
         const responseData: APIResponse = await userServiceResponse.json() as APIResponse;
-
-        console.log('got response ');
-        console.log(responseData);
 
         //First check if an error occurred
         if (responseData['error']) {
@@ -73,9 +67,6 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
         request.session.userid = responseData['data'];
         request.session.save();
 
-        console.log('saved session userid is now ');
-
-        console.log(request.session.userid);
         response.status(200).json({ 'data': 'success' });
     } catch (error) {
         next(error);

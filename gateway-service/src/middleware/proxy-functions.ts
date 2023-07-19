@@ -20,6 +20,7 @@ export const APIServicesProxyMiddleware = createProxyMiddleware({
         '/api/Song'                      : 'http://song-container:8888',   // path only
         '/api/User'                      : 'http://user-contianer:8008'   // path only
     },
+    onProxyReq: (proxyReq, request, response) => proxyReq.setHeader("API-Key", process.env.API_KEY!),
     onError: (err, request, response, target) => {
         console.log(err);
         response.status(500).json({ 'error': 'internal server error' })

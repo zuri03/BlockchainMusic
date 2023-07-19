@@ -11,6 +11,8 @@ services:
       - '9090:9090'
     container_name: gateway-container
     restart: unless-stopped
+    environment:
+      - API_KEY=${GATEWAY_API_KEY}
   
   user-service:
     image: user-service
@@ -21,8 +23,6 @@ services:
       - MONGO_USERNAME=${MONGO_USER_SERVICE_USERNAME}
       - MONGO_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
       - MONGO_DB_NAME=${INIT_DATABASE}
-    ports:
-      - '8008:8008'
     container_name: user-container
     restart: unless-stopped
 
@@ -50,8 +50,6 @@ services:
     build:
       context: ./song-service/.
       dockerfile: ./Dockerfile
-    ports:
-      - '8888:8888'
     depends_on:
       - song-mongo
     container_name: song-container
