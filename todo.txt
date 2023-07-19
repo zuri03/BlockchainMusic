@@ -32,7 +32,7 @@ architecture:
 
 future plans:
     create cli for interacting with the system
-    
+
 todo:
     set up production configuration for each service
 
@@ -89,6 +89,7 @@ todo:
     blockchain service:
         securing data stored in smart contracts (research)
         hash userid for dynamodb
+        improve security of smart contract https://docs.soliditylang.org/en/v0.8.21/security-considerations.html#clearing-mappings
 
 
          

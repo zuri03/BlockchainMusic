@@ -10,10 +10,9 @@ export default class SmartContractDeployer {
 
     private account: any;
 
-    //web3: web3 instance for interacting with ethereum network
     private web3Provider: web3;
 
-    static DeployerIntance: SmartContractDeployer;
+    private static DeployerIntance: SmartContractDeployer;
 
     private constructor() {
 
