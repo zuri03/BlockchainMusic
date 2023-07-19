@@ -26,7 +26,7 @@ export default class SmartContractDeployer {
         const compilerInput = {
             language: 'Solidity',
             sources: {
-                'Songs.sol': { contractByteContent }
+                'Songs.sol': { content: contractByteContent }
             },
             settings: {
                 outputSelection: { '*': { '*': ['*'] } }
