@@ -29,6 +29,10 @@ architecture:
             - rest api that manages metadata about songs
         - static file server:
             - serves HTML, CSS and JS files to the user
+
+future plans:
+    create cli for interacting with the system
+    
 todo:
     set up production configuration for each service
 
