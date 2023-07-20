@@ -1,7 +1,18 @@
 import configureApp from './src/app.js';
 import { destroyS3BucketClient } from './src/clients/s3-client.js';
+import { connectToDatabase } from './src/db/db';
+import { configureS3Client } from './src/clients/s3-client';
 
 (async function () {
+
+    if (!process.env.GATEWAY_API_KEY) {
+        throw new Error("Key not defined in the environemtn");
+    }
+
+    await connectToDatabase();
+
+    configureS3Client();
+
     const app = await configureApp();
 
     //temp port

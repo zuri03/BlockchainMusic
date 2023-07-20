@@ -62,3 +62,19 @@ export const authorizeReqest = function (request: Request, response: Response, n
     next();
 }
 
+export const validateAPIKey = function (request: Request, response: Response, next: NextFunction) {
+    
+    const apiKey: string | undefined = request.get('API-Key');
+
+    if (!apiKey) {
+        response.status(400).json({ 'error': 'missing required values' });
+        return;
+    }
+
+    if (apiKey !== process.env.GATEWAY_API_KEY!) {
+        response.status(403).json({ 'error': 'unathorized' });
+        return;
+    }
+
+    next();
+}

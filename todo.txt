@@ -34,9 +34,10 @@ future plans:
     create cli for interacting with the system
 
 todo:
-    set up production configuration for each service
 
-    configure each service to only accept requests from API Gateway
+    set up s3 bucket file upload integration tests
+
+    set up production configuration for each service
     
     set up HTTPS
     

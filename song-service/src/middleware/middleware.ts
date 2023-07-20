@@ -5,9 +5,7 @@ import {
 } from 'express';
 import { ObjectId } from 'mongodb';
 import { collections } from '../db/db';
-import bcrypt from 'bcrypt';
 
-const SALT_ROUNDS = 3;
 const PAGE_LIMIT = 100;
 const DEFAULT_OFFSET = 0;
 const DEFAULT_PAGE_SIZE = 10;
@@ -105,14 +103,26 @@ export const ParsePagination = async function (request: Request, response: Respo
     }
 
     try {
-
-        response.locals.paging = {
-            offset: offset,
-            pageSize
-        }
-
+        response.locals.paging = { offset, pageSize }
         next();
     } catch (error) {
         next(error);
     }
+}
+
+export const validateAPIKey = function (request: Request, response: Response, next: NextFunction) {
+    
+    const apiKey: string | undefined = request.get('API-Key');
+
+    if (!apiKey) {
+        response.status(400).json({ 'error': 'missing required values' });
+        return;
+    }
+
+    if (apiKey !== process.env.GATEWAY_API_KEY!) {
+        response.status(403).json({ 'error': 'unathorized' });
+        return;
+    }
+
+    next();
 }

@@ -2,13 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import addressRouter from './routes/address-routes';
-import { customErrorHandler } from './middleware/middleware-functions';
+import { customErrorHandler, validateAPIKey } from './middleware/middleware-functions';
 
 export default function configureApp(): express.Application {
 
     const app: express.Application = express();
 
     app.use(cors());
+
+    app.use(validateAPIKey);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {

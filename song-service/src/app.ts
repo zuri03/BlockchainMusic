@@ -4,24 +4,21 @@ import songRouter from './routes/song-routes';
 import coverRouter from './routes/cover-routes'
 import cors from 'cors';
 import multer from 'multer';
-import { CustomErrorHandler } from './middleware/middleware';
-import { connectToDatabase } from './db/db';
-import { configureS3Client } from './clients/s3-client';
+import { CustomErrorHandler, validateAPIKey } from './middleware/middleware';
+
 
 const FILE_UPLOAD_MAX_SIZE = 40000;
 
 export default async function configureApp() : Promise<express.Application> {
 
-    await connectToDatabase();
-
-    configureS3Client();
-    
     const app : express.Application = express();
 
     //initialize multer
     const upload = multer({ limits: { fileSize: FILE_UPLOAD_MAX_SIZE } });
 
     app.use(cors());
+
+    app.use(validateAPIKey);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {
@@ -43,20 +40,4 @@ export default async function configureApp() : Promise<express.Application> {
 
     return app;
 }
-
-/*
-GET: /Song: Gets info on all songs available (will need pagination),
-GET: /Song/<id>: Gets information for a specific song
-GET: /Song/Search/<searchTerm>: Gets all songs where the title matches the serach term
-POST: /Song: Adds a new song to the DB
-{
-    'id': <id>
-    'title': 'example', //song title
-    'author': 'example', //username of the user who uploaded the song
-    'authorId' <id>, //id of the user who uploaded the song
-    'coverURL': <coverURL>, //url of the cover 
-    'createdAt': <datetime>, //datetime created on the server
-}
-DELETE: /Song/<id>: Deletes a song from the db
-*/
  

@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import userRouter from './routes/user-routes';
 import authenticationRouter from './routes/authenticate-routes';
-import { CustomErrorHandler } from './middleware/middleware-functions';
+import { CustomErrorHandler, validateAPIKey } from './middleware/middleware-functions';
 import { connectToDatabase } from './db/database';
 
 export default async function configureApp() : Promise<express.Application> {
@@ -13,6 +13,8 @@ export default async function configureApp() : Promise<express.Application> {
     const app : express.Application = express();
 
     app.use(cors());
+
+    app.use(validateAPIKey);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {
