@@ -1,6 +1,6 @@
 import configureApp from './src/app.js';
 import { destroyS3BucketClient } from './src/clients/s3-client.js';
-import { connectToDatabase } from './src/db/db';
+import SongServiceDatabase from './src/db/db';
 import { configureS3Client } from './src/clients/s3-client';
 
 (async function () {
@@ -9,11 +9,13 @@ import { configureS3Client } from './src/clients/s3-client';
         throw new Error("Key not defined in the environemtn");
     }
 
-    await connectToDatabase();
+    //dependencies
+    const database = new SongServiceDatabase();
+    await database.configureDatabase();
 
     configureS3Client();
 
-    const app = await configureApp();
+    const app = await configureApp(database);
 
     //temp port
     const PORT = 8888;

@@ -7,7 +7,7 @@ const DEFAULT_OFFSET = 0;
 const DEFAULT_PAGE_SIZE = 10;
 
 export default class SongServiceDatabase implements SongDB {
-    
+
     private songCollection?: mongoDB.Collection<Song>;
 
     async configureDatabase() {
@@ -133,5 +133,3 @@ export default class SongServiceDatabase implements SongDB {
         }
     }
 }
-
-//export const collections: { songs?: mongoDB.Collection<Song> } = {};
