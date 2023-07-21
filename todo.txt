@@ -85,7 +85,6 @@ todo:
         express' session middleware is not meant for production (product configuration)
             - search for a compatible session store to pair with the middlware (research)
         look into session hijacking prevention techniques (research)
-        https://evertpot.com/jwt-is-a-bad-default/
 
     blockchain service:
         securing data stored in smart contracts (research)

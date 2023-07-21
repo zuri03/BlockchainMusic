@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Song from '../models/song';
-import { Paging, PaginatedResult } from '../models/pagination';
 import { 
   AuthorizeRequest, 
   ParsePagination, 
@@ -8,6 +7,7 @@ import {
 } from '../middleware/middleware';
 import { collections } from '../db/db';
 import { ObjectId } from 'mongodb';
+import { Paging, PaginatedResult } from '../types/app-types';
 
 const router: Router = Router();
 
