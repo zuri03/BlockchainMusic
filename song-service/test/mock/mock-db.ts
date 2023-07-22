@@ -4,8 +4,8 @@ import Song from '../../src/models/song';
 export default class MockDB implements SongDB {
     private songs: Song[];
 
-    constructor() {
-        this.songs = [];
+    constructor(initialSongs?: Song[]) {
+        this.songs = initialSongs || [];
     }
 
     async totalDocumentCount(): Promise<number> {

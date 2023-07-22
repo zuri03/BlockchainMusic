@@ -61,6 +61,7 @@ todo:
         add a input handling/cleaning library (express-validator)
         improve security of docker container (research)
         cache the totalCount so that an extra db query is not needed on every Request
+        configure jest to work with ObjectID
         
     static file server: 
         improve the look of each page and the site theme
@@ -89,6 +90,7 @@ todo:
         securing data stored in smart contracts (research)
         hash userid for dynamodb
         improve security of smart contract https://docs.soliditylang.org/en/v0.8.21/security-considerations.html#clearing-mappings
+
 
 
          

@@ -64,3 +64,4 @@ services:
     volumes:
       - ./scripts/user-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   
+  

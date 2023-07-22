@@ -33,12 +33,12 @@ const initSongRouter = function (controller: SongController): Router {
         next();
     });
 
-    router.get('/', parsePagination, controller.getSongs);
+    router.get('/', parsePagination, controller.getSongs.bind(controller));
     router.get('/:id', controller.getSong);
-    router.get('/Search/:searchTerm', parsePagination, controller.searchSong);
+    router.get('/Search/:searchTerm', parsePagination, controller.searchSong.bind(controller).bind(controller));
     router.post('/', controller.createSong);
-    router.delete("/:id", checkForAuthorizationHeader, controller.deleteSong);
-    router.put("/:id", checkForAuthorizationHeader, controller.deleteSong);
+    router.delete("/:id", checkForAuthorizationHeader, controller.deleteSong.bind(controller));
+    router.put("/:id", checkForAuthorizationHeader, controller.deleteSong.bind(controller));
 
     return router;
 }
@@ -57,7 +57,7 @@ const initCoverRouter = function (controller: CoverController): Router {
         next();
     });
 
-    router.post('/', controller.uploadFile);
+    router.post('/', controller.uploadFile.bind(controller));
 
     return router;
 }
@@ -78,6 +78,7 @@ export default async function configureApp(database: SongDB, s3Client: S3BucketC
     });
 
     const songController = new SongController(database);
+    
     const songRouter = initSongRouter(songController);
     const coverController = new CoverController(s3Client);
     const coverRouter = initCoverRouter(coverController);

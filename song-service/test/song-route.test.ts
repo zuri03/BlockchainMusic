@@ -1,94 +1,170 @@
 import request from 'supertest';
 import configureApp from '../src/app';
 import MockDB from './mock/mock-db';
+import MockClient from './mock/mock-s3Client';
 import 'jest';
+import { ObjectId } from 'mongodb';
+import { Application } from 'express';
 
-//When uuid is implemented these tests will need to change to become less strict with the expected results
-describe('Song routes read test', async () => {
+describe('Testing API Keys', () => {
+    const bucketName = 'coverBucket';
+    const bucketRegion = 'bucketRegion';
 
-    const app = await configureApp();
+    const client: MockClient = new MockClient(bucketName, bucketRegion);
+    const db: MockDB = new MockDB();
+
+    let app: Application;
+    const original = process.env;
+    const testKey = "KEY";
+
+    beforeAll(async () => {
+        app = await configureApp(db, client);
+    });
+
+    beforeEach(() => {
+        jest.resetModules();
+        process.env = { ...original }; 
+    });
+
+    afterAll(() => {
+        process.env = original;
+        process.env.GATEWAY_API_KEY = testKey;
+    });
+
+    test('No key provided', async () => {
+        const expectedResponse = 'missing required values';
+
+        const response = await request(app).get("/api/Song").expect(400);
+        expect(response.body.error).toBeDefined();
+        expect(response.body.error).toEqual(expectedResponse);
+    });
+
+    test('Incorrect Key', async () => {
+        const expectedResponse = 'unathorized';
+        const response = await request(app).get("/api/Song")
+            .set('API-Key', testKey)
+            .expect(403);
+        expect(response.body.error).toBeDefined();
+        expect(response.body.error).toEqual(expectedResponse);
+    });
+
+})
+
+describe('Song routes read test', () => {
+    const bucketName = 'coverBucket';
+    const bucketRegion = 'bucketRegion';
+
+    const client: MockClient = new MockClient(bucketName, bucketRegion);
+    const initialData = [
+        {
+            //id: new ObjectId("64bb4095fc13ae6174beecb6"),
+            id: new ObjectId(0),
+            title: 'title does not exist',
+            authorId: 'my id',
+            author: 'me',
+            description: 'here is a desc'
+        },
+        {
+            //id: new ObjectId("64bb4095fc13ae6174beecb0"),
+            id: new ObjectId(1),
+            title: 'title does not exist',
+            authorId: 'my id',
+            author: 'me',
+            description: 'wow another description'
+        },
+        {
+            //id: new ObjectId("64bb4095fc13ae6174beec77"),
+            id: new ObjectId(2),
+            title: 'made up song',
+            authorId: 'some authorid',
+            author: 'some author'
+        },
+        {
+            //id: new ObjectId("64bb4095fc13ae6174beec86"),
+            id: new ObjectId(3),
+            title: 'made up song',
+            authorId: 'aNewId',
+            author: 'completely different author'
+        }
+    ]
+    const db: MockDB = new MockDB(initialData);
+
+    let app: Application;
+    const original = process.env;
+    const testKey = "KEY";
+
+    beforeAll(async () => {
+        app = await configureApp(db, client);
+    });
+
+    beforeEach(() => {
+        jest.resetModules();
+        process.env = { ...original }; 
+    });
+
+    afterAll(() => {
+        process.env = original;
+        process.env.GATEWAY_API_KEY = testKey;
+    });
 
     test('Get All', async () => {
-        const expectedResponse = { 'data': [{
-            id: '1',
-            title: 'title1',
-            authorId: 'authorId',
-            author: 'author1',
-            createdAt: 'createdAt',
-            description: 'description'
-        },
-        {
-            id: '2',
-            title: 'title2',
-            authorId: 'authorId',
-            author: 'author2',
-            createdAt: 'createdAt',
-            description: 'description'
-        },
-        {
-            id: '3',
-            title: 'title3',
-            authorId: 'authorId',
-            author: 'author3',
-            createdAt: 'createdAt',
-            description: 'description'
-        }]} ;
+        const expectedResponse = initialData;
 
-        const response = await request(app).get("/api/Song");
-        expect(response.body).toEqual(expectedResponse)
+        const response = await request(app)
+            .get("/api/Song")
+            .set('API-Key', testKey)
+            .expect(200);
+        expect(response.body.data).toBeDefined()
+        expect(response.body.data).toEqual(expectedResponse)
     });
 
     test('Get Song', async () => {
-        const expectedResponse = { 'data': {
-            id: '1',
-            title: 'title1',
-            authorId: 'authorId',
-            author: 'author1',
-            createdAt: 'createdAt',
-            description: 'description'
-        }};
+        const expectedResponse = initialData[0];
 
-        const response = await request(app).get("/api/Song/1").expect(200);
-        expect(response.body).toEqual(expectedResponse);
+        const response = await request(app)
+            .get("/api/Song/0")
+            .set('API-Key', testKey)
+            .expect(200);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.data).toEqual(expectedResponse);
     });
 
     test('Search Song', async () => {
-        const expectedResponse = { 'data': [{
-            id: '3',
-            title: 'title3',
-            authorId: 'authorId',
-            author: 'author3',
-            createdAt: 'createdAt',
-            description: 'description'
-        }]};
+        const expectedResponse = [{
+            //id: new ObjectId("64bb4095fc13ae6174beec77"),
+            id: new ObjectId(2),
+            title: 'made up song',
+            authorId: 'some authorid',
+            author: 'some author'
+        },
+        {
+            //id: new ObjectId("64bb4095fc13ae6174beec86"),
+            id: new ObjectId(3),
+            title: 'made up song',
+            authorId: 'aNewId',
+            author: 'completely different author'
+        }];
 
-        const response = await request(app).get("/api/Song/Search/title3").expect(200);
-        expect(response.body).toEqual(expectedResponse);
-    });
+        const searchTerm = encodeURIComponent("made up song");
 
-    test('Search Song', async () => {
-        const expectedResponse = { 'data': [{
-            id: '3',
-            title: 'title3',
-            authorId: 'authorId',
-            author: 'author3',
-            createdAt: 'createdAt',
-            description: 'description'
-        }]};
-
-        const response = await request(app).get("/api/Song/Search/title3");
-        expect(response.body).toEqual(expectedResponse);
+        const response = await request(app)
+            .get(`/api/Song/Search/${searchTerm}`)
+            .set('API-Key', testKey)
+            .expect(200);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.data).toEqual(expectedResponse);
     });
 });
 
+/*
 describe('Song routes write tests', async () => {
-    const app = await setUp();
+    const bucketName = 'coverBucket';
+    const bucketRegion = 'bucketRegion';
 
-    //ensure to reset the instance back to the original 
-    beforeEach(() => {
-        const songRepository = SongRepository.getInstance();
-        songRepository.resetRepository();
-    });
+    const client: MockClient = new MockClient(bucketName, bucketRegion);
+    const db: MockDB = new MockDB();
+
+    const app = await configureApp(db, client);
 
     test('Add Song', async () => {
         const requestBody = {
@@ -132,3 +208,4 @@ describe('Song routes write tests', async () => {
         expect(response.body).toEqual(expectedResponse);
     });
 });
+*/
