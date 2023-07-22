@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Paging, PaginatedResult, SongDB } from '../types/app-types';
+import crypto from 'crypto';
 
 export default class SongController {
     private songServiceDatabase: SongDB;
@@ -13,7 +14,6 @@ export default class SongController {
         const paging: Paging = response.locals.paging as Paging;
 
         try {
-
             const count = await this.songServiceDatabase.totalDocumentCount();
             paging.totalCount = count;
 
@@ -50,11 +50,11 @@ export default class SongController {
     }
 
     async searchSong(request: Request, response: Response, next: NextFunction) {
+
         const paging: Paging = response.locals.paging as Paging;
         const searchTerm: string | undefined = request.params.searchTerm
 
         try {
-
             const count = await this.songServiceDatabase.totalDocumentCount();
             paging.totalCount = count;
 
@@ -84,8 +84,10 @@ export default class SongController {
                 response.status(400).json(responseBody);
                 return;
             }
+
+            const songid: string = crypto.randomUUID();
     
-            await this.songServiceDatabase.createSong(title, author, authorId, description);
+            await this.songServiceDatabase.createSong(songid, title, author, authorId, description);
             response.status(200).end();
         } catch (error) {
             next(error)

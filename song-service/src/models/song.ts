@@ -1,7 +1,5 @@
-import { ObjectId } from 'mongodb';
-
 export default interface Song {
-    id?: ObjectId,
+    id?: string,
     title: string,
     author: string,
     authorId: string,

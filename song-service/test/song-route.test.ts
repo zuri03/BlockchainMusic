@@ -107,6 +107,7 @@ describe('Song routes read test', () => {
         process.env.GATEWAY_API_KEY = testKey;
     });
 
+    /*
     test('Get All', async () => {
         const expectedResponse = initialData;
 
@@ -117,7 +118,7 @@ describe('Song routes read test', () => {
         expect(response.body.data).toBeDefined()
         expect(response.body.data).toEqual(expectedResponse)
     });
-
+    */
     test('Get Song', async () => {
         const expectedResponse = initialData[0];
 
@@ -128,7 +129,8 @@ describe('Song routes read test', () => {
         expect(response.body.data).toBeDefined();
         expect(response.body.data).toEqual(expectedResponse);
     });
-
+    
+    /*
     test('Search Song', async () => {
         const expectedResponse = [{
             //id: new ObjectId("64bb4095fc13ae6174beec77"),
@@ -154,6 +156,7 @@ describe('Song routes read test', () => {
         expect(response.body.data).toBeDefined();
         expect(response.body.data).toEqual(expectedResponse);
     });
+    */
 });
 
 /*

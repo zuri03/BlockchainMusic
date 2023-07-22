@@ -80,8 +80,9 @@ export default class SongServiceDatabase implements SongDB {
     }
 
     //createSong
-    async createSong(title: string, author: string, authorId: string, description?: string): Promise<void> {
+    async createSong(id: string, title: string, author: string, authorId: string, description?: string): Promise<void> {
         const newSong: Song = {
+            id,
             title,
             author,
             authorId,
