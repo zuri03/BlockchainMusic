@@ -5,13 +5,17 @@ export default class MockDB implements SongDB {
     private songs: Song[];
 
     constructor(initialSongs?: Song[]) {
-        this.songs = initialSongs || [];
+        if (initialSongs) {
+            this.songs = [ ...initialSongs ];
+        } else {
+            this.songs = []
+        }
     }
 
     async totalDocumentCount(): Promise<number> {
         return this.songs.length;
     }
-
+    
     async getSongs(offset?: number, pageSize?: number): Promise<Song[]> {
         const start: number = offset || 0;
         const end: number = pageSize && offset ? pageSize + offset : start + 10;
@@ -31,8 +35,9 @@ export default class MockDB implements SongDB {
             .slice(start, end)
     }
 
-    async createSong(title: string, author: string, authorId: string, description?: string): Promise<void> {
+    async createSong(id: string, title: string, author: string, authorId: string, description?: string): Promise<void> {
         const song: Song = {
+            id,
             title,
             author,
             authorId,
@@ -57,6 +62,7 @@ export default class MockDB implements SongDB {
 
         return 1;
     }
+
     async updateSong(songid: string, title: string, description?: string): Promise<void> {
         const index = this.songs.findIndex(song => song['id']?.toString() === songid);
 
@@ -65,5 +71,13 @@ export default class MockDB implements SongDB {
         originalSong.description = description;
         
         this.songs[index] = originalSong;
+    }
+
+    resetData(songs?: Song[]): void {
+        if (songs) {
+            this.songs = [ ...songs ];
+        } else {
+            this.songs = []
+        }
     }
 }

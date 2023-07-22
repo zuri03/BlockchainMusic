@@ -27,10 +27,10 @@ export default class SongController {
     }
 
     async getSong(request: Request, response: Response, next: NextFunction) {
+        
         const id: string | undefined = request.params.id;
 
         if (!id) {
-            //bad request
             response.status(400).json({ 'error': 'Request is missing the "id" parameter from the path'});
             return; 
         }

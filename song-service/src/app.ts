@@ -34,11 +34,11 @@ const initSongRouter = function (controller: SongController): Router {
     });
 
     router.get('/', parsePagination, controller.getSongs.bind(controller));
-    router.get('/:id', controller.getSong);
+    router.get('/:id', controller.getSong.bind(controller));
     router.get('/Search/:searchTerm', parsePagination, controller.searchSong.bind(controller).bind(controller));
-    router.post('/', controller.createSong);
+    router.post('/', controller.createSong.bind(controller));
     router.delete("/:id", checkForAuthorizationHeader, controller.deleteSong.bind(controller));
-    router.put("/:id", checkForAuthorizationHeader, controller.deleteSong.bind(controller));
+    router.put("/:id", checkForAuthorizationHeader, controller.updateSong.bind(controller));
 
     return router;
 }
