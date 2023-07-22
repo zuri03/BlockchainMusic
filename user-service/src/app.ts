@@ -1,5 +1,4 @@
 import express from 'express'
-import cors from 'cors';
 import bodyParser from 'body-parser';
 import userRouter from './routes/user-routes';
 import authenticationRouter from './routes/authenticate-routes';
@@ -11,8 +10,6 @@ export default async function configureApp() : Promise<express.Application> {
     await connectToDatabase();
 
     const app : express.Application = express();
-
-    app.use(cors());
 
     app.use(validateAPIKey);
 

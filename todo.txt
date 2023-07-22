@@ -60,9 +60,8 @@ todo:
         finish adding tests for all routes (depends on mock db)
         add a input handling/cleaning library (express-validator)
         improve security of docker container (research)
-        cache the totalCount so that an extra db query is not needed on every request
-        properly configure CORS
-
+        cache the totalCount so that an extra db query is not needed on every Request
+        
     static file server: 
         improve the look of each page and the site theme
         finish web pages:

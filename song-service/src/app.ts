@@ -1,5 +1,4 @@
 import bodyParser from 'body-parser';
-import cors from 'cors';
 import multer from 'multer';
 import SongController from './controllers/song-controller';
 import CoverController from './controllers/cover-controller';
@@ -69,8 +68,6 @@ export default async function configureApp(database: SongDB, s3Client: S3BucketC
 
     //initialize multer
     const upload = multer({ limits: { fileSize: FILE_UPLOAD_MAX_SIZE } });
-
-    app.use(cors());
 
     app.use(validateAPIKey);
 
