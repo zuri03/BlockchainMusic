@@ -16,7 +16,7 @@ export interface SongDB {
     getSongs(offset?: number, pageSize?: number): Promise<Song[]>;
     getSongByID(songid: string): Promise<Song | undefined>;
     getSongsBySearchTerm(searchTerm: string, offset?: number, pageSize?: number): Promise<Song[]>;
-    createSong(title: string, author: string, authorId: string, description?: string): Promise<void>
+    createSong(title: string, author: string, authorId: string, description?: string): Promise<void>;
     deleteSong(songid: string): Promise<number>;
     updateSong(songid: string, title: string, description?: string): Promise<void>;
 }
