@@ -1,11 +1,12 @@
 import request from 'supertest';
-import setUp from '../src/app';
-import { SongRepository  } from '../src/db/song-repository';
+import configureApp from '../src/app';
+import MockDB from './mock/mock-db';
 import 'jest';
 
 //When uuid is implemented these tests will need to change to become less strict with the expected results
 describe('Song routes read test', async () => {
-    const app = await setUp();
+
+    const app = await configureApp();
 
     test('Get All', async () => {
         const expectedResponse = { 'data': [{
