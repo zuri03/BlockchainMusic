@@ -1,5 +1,4 @@
 import Song from '../models/song';
-import * as mongoDB from "mongodb";
 
 export interface Paging {
     offset: number,
@@ -20,4 +19,9 @@ export interface SongDB {
     createSong(title: string, author: string, authorId: string, description?: string): Promise<void>
     deleteSong(songid: string): Promise<number>;
     updateSong(songid: string, title: string, description?: string): Promise<void>;
+}
+
+export interface S3BucketClient {
+    uploadCoverFile(file: Express.Multer.File): Promise<string>;
+    destroyS3BucketClient(): void;
 }

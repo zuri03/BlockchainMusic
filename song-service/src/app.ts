@@ -1,9 +1,8 @@
-//import express, { Router } from 'express'
 import bodyParser from 'body-parser';
-import coverRouter from './routes/cover-routes'
 import cors from 'cors';
 import multer from 'multer';
 import SongController from './controllers/song-controller';
+import CoverController from './controllers/cover-controller';
 import express, { 
     Router, 
     Request, 
@@ -17,7 +16,7 @@ import {
     customErrorHandler, 
     validateAPIKey 
 } from './middleware/middleware';
-import { SongDB } from './types/app-types';
+import { SongDB, S3BucketClient } from './types/app-types';
 
 const FILE_UPLOAD_MAX_SIZE = 40000;
 
@@ -45,7 +44,26 @@ const initSongRouter = function (controller: SongController): Router {
     return router;
 }
 
-export default async function configureApp(database: SongDB) : Promise<express.Application> {
+const initCoverRouter = function (controller: CoverController): Router {
+    const router: Router = Router();
+
+    router.use((request: Request, response: Response, next: NextFunction) => {
+        const method: string = request.method;
+    
+        if (method !== 'POST') {
+            response.status(405).json({ 'error': 'method not supported' });
+            return;
+        }
+    
+        next();
+    });
+
+    router.post('/', controller.uploadFile);
+
+    return router;
+}
+
+export default async function configureApp(database: SongDB, s3Client: S3BucketClient) : Promise<express.Application> {
 
     const app : Application = express();
 
@@ -62,9 +80,10 @@ export default async function configureApp(database: SongDB) : Promise<express.A
         next();
     });
 
-    const controller = new SongController(database);
-
-    const songRouter = initSongRouter(controller);
+    const songController = new SongController(database);
+    const songRouter = initSongRouter(songController);
+    const coverController = new CoverController(s3Client);
+    const coverRouter = initCoverRouter(coverController);
 
     //set up the song and cover router
     app.use('/api/Song', bodyParser.json(), songRouter);

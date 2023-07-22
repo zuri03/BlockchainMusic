@@ -1,7 +1,6 @@
 import configureApp from './src/app.js';
-import { destroyS3BucketClient } from './src/clients/s3-client.js';
+import SongServiceS3Client from './src/clients/s3-client.js';
 import SongServiceDatabase from './src/db/db';
-import { configureS3Client } from './src/clients/s3-client';
 
 (async function () {
 
@@ -12,10 +11,9 @@ import { configureS3Client } from './src/clients/s3-client';
     //dependencies
     const database = new SongServiceDatabase();
     await database.configureDatabase();
+    const client = new SongServiceS3Client();
 
-    configureS3Client();
-
-    const app = await configureApp(database);
+    const app = await configureApp(database, client);
 
     //temp port
     const PORT = 8888;
@@ -25,7 +23,7 @@ import { configureS3Client } from './src/clients/s3-client';
         console.log(`${signal} recieved, shutting down server`);
 
         console.log('Shutting down s3 connections');
-        destroyS3BucketClient();
+        client.destroyS3BucketClient();
 
         console.log('Shutting down API')
         server.close(() => {
