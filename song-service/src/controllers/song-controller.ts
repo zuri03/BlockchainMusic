@@ -94,24 +94,55 @@ export default class SongController {
 
     async deleteSong(request: Request, response: Response, next: NextFunction) {
         const id: string = request.params.id;
+        const userid: string = request.get('authorization')!.split(" ")[1];
 
         try {
-          const deletionCount = await this.songServiceDatabase.deleteSong(id);
-          
-          if (deletionCount === 0) {
+            const song = await this.songServiceDatabase.getSongByID(id);
+
+            if (!song) {
+                response.status(404).json({ 'error': `song with id ${id} not found`});
+                return;
+            }
+
+            const authorized = userid === song.authorId;
+
+            if (!authorized) {
+                response.status(401).json({ 'error': `Not authorized to modify this resource` });
+                return;
+            }
+
+            const deletionCount = await this.songServiceDatabase.deleteSong(id);
+            
+            if (deletionCount === 0) {
             response.status(404).json({ 'error': `song with id ${id} not found`});
             return;
-          }
+            }
 
-          response.status(200).end();
+            response.status(200).end();
         } catch (error) {
           next(error);
         }
     }
 
     async updateSong(request: Request, response: Response, next: NextFunction) {
-        try{
+        try {
+            const userid: string = request.get('authorization')!.split(" ")[1];
+
             const id: string = request.params.id;
+
+            const song = await this.songServiceDatabase.getSongByID(id);
+
+            if (!song) {
+                response.status(404).json({ 'error': `song with id ${id} not found`});
+                return;
+            }
+
+            const authorized = userid === song.authorId;
+
+            if (!authorized) {
+                response.status(401).json({ 'error': `Not authorized to modify this resource` });
+                return;
+            }
         
             const { title, author, authorId, description } = request.body;
         

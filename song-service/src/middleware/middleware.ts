@@ -3,15 +3,13 @@ import {
     Request, 
     Response 
 } from 'express';
-import { ObjectId } from 'mongodb';
-import { collections } from '../db/db';
 
 const PAGE_LIMIT = 100;
 const DEFAULT_OFFSET = 0;
 const DEFAULT_PAGE_SIZE = 10;
 
 //If this function is called it is an internal server error, all other errors will be handled in the routes
-export const CustomErrorHandler = function (error: Error, request: Request, response: Response, next: NextFunction) {
+export const customErrorHandler = function (error: Error, request: Request, response: Response, next: NextFunction) {
     if (response.headersSent) {
         return next(error);
     }
@@ -40,45 +38,7 @@ export const checkForAuthorizationHeader = function (request: Request, response:
     next();
 }
 
-export const AuthorizeRequest = async function (request: Request, response: Response, next: NextFunction) {
-
-    //at this point we can assume the authorization header is present due to previous middleware
-    const authorId: string = request.get('authorization')!.split(" ")[1];
-
-    const id = request.params.id;
-
-    if (!id || !authorId) {
-        response.status(400).json({ 'error': 'id or authorid is missing from request' });
-        return;
-    }
-
-    try {
-
-        const mongoQuery = { _id: new ObjectId(id) };
-        const song = await collections.songs!.findOne(mongoQuery);
-
-        if (!song) {
-            response.status(404).json({ 'error': `Song with id ${id} not found` });
-            return;
-        }
-
-        //for now authorid is stored in plain text
-        const authorized = authorId === song.authorId
-
-        if (!authorized) {
-            response.status(401).json({ 'error': `Not authorized to modify this resource` });
-            return;
-        }
-    
-        //set the song in 'locals' so it can be accessed by functions down the middlware pipeline
-        response.locals.song = song;
-        next();
-    } catch (error) {
-        next(error);
-    }   
-} 
-
-export const ParsePagination = async function (request: Request, response: Response, next: NextFunction) {
+export const parsePagination = async function (request: Request, response: Response, next: NextFunction) {
     const offset: number = parseInt((request.query.offset || DEFAULT_OFFSET) as string);
     const pageSize: number = parseInt((request.query.pageSize || DEFAULT_PAGE_SIZE) as string);
 

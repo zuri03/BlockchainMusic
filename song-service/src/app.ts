@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import coverRouter from './routes/cover-routes'
 import cors from 'cors';
 import multer from 'multer';
-import { CustomErrorHandler, validateAPIKey } from './middleware/middleware';
 import SongController from './controllers/song-controller';
 import express, { 
     Router, 
@@ -12,10 +11,11 @@ import express, {
     NextFunction, 
     Application 
 } from 'express';
-import { 
-    AuthorizeRequest, 
-    ParsePagination, 
-    checkForAuthorizationHeader 
+import {  
+    parsePagination, 
+    checkForAuthorizationHeader,
+    customErrorHandler, 
+    validateAPIKey 
 } from './middleware/middleware';
 import { SongDB } from './types/app-types';
 
@@ -35,12 +35,12 @@ const initSongRouter = function (controller: SongController): Router {
         next();
     });
 
-    router.get('/', ParsePagination, controller.getSongs);
+    router.get('/', parsePagination, controller.getSongs);
     router.get('/:id', controller.getSong);
-    router.get('/Search/:searchTerm', ParsePagination, controller.searchSong);
+    router.get('/Search/:searchTerm', parsePagination, controller.searchSong);
     router.post('/', controller.createSong);
-    router.delete("/:id", checkForAuthorizationHeader, AuthorizeRequest, controller.deleteSong);
-    router.put("/:id", checkForAuthorizationHeader, AuthorizeRequest, controller.deleteSong);
+    router.delete("/:id", checkForAuthorizationHeader, controller.deleteSong);
+    router.put("/:id", checkForAuthorizationHeader, controller.deleteSong);
 
     return router;
 }
@@ -76,7 +76,7 @@ export default async function configureApp(database: SongDB) : Promise<express.A
     });
 
     //Error handler middleware function
-    app.use(CustomErrorHandler);
+    app.use(customErrorHandler);
 
     return app;
 }

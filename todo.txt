@@ -62,7 +62,6 @@ todo:
         improve security of docker container (research)
         cache the totalCount so that an extra db query is not needed on every request
         properly configure CORS
-        refactor middleware
 
     static file server: 
         improve the look of each page and the site theme
