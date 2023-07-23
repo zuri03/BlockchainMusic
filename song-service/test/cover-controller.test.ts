@@ -22,12 +22,11 @@ describe('Testing cover controller', () => {
         process.env = { ...original }; 
     });
 
-    afterAll(() => {
-        process.env = original;
-    });
+    afterAll(() => process.env = original);
 
     test('Upload File', async () => {
         process.env.GATEWAY_API_KEY = testKey;
+        const spy = jest.spyOn(client, 'uploadCoverFile');
         const expectedResponse = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/s3ObjectKey`;
         const fileData: string = fs.readFileSync('./test/testdata/download.png', 'utf-8');
         const fileBuffer: Buffer = Buffer.from(fileData, 'utf-8');
@@ -38,6 +37,7 @@ describe('Testing cover controller', () => {
             .attach('cover-file', fileBuffer, 'test_file_.txt')
             .expect(200); 
         
+        expect(spy).toBeCalled();
         expect(response.body.data).toBeDefined();
 
         const data = response.body.data;

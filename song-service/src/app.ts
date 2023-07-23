@@ -65,9 +65,11 @@ const initCoverRouter = function (controller: CoverController): Router {
 export default async function configureApp(database: SongDB, s3Client: S3BucketClient) : Promise<express.Application> {
 
     const app : Application = express();
-
-    //initialize multer
     const upload = multer({ limits: { fileSize: FILE_UPLOAD_MAX_SIZE } });
+    const songController = new SongController(database);
+    const songRouter = initSongRouter(songController);
+    const coverController = new CoverController(s3Client);
+    const coverRouter = initCoverRouter(coverController);
 
     app.use(validateAPIKey);
 
@@ -76,13 +78,7 @@ export default async function configureApp(database: SongDB, s3Client: S3BucketC
         console.log(`INFO: ${request.method}: URL: ${request.url}`);
         next();
     });
-
-    const songController = new SongController(database);
     
-    const songRouter = initSongRouter(songController);
-    const coverController = new CoverController(s3Client);
-    const coverRouter = initCoverRouter(coverController);
-
     //set up the song and cover router
     app.use('/api/Song', bodyParser.json(), songRouter);
     app.use('/api/Cover', upload.single('cover-file'), coverRouter);

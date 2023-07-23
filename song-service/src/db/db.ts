@@ -31,11 +31,10 @@ export default class SongServiceDatabase implements SongDB {
 
         const db = client.db(process.env.MONGO_DB_NAME);
 
-        const songsCollection = db.collection<Song>(dbCollectionName);
-        this.songCollection = songsCollection;
+        this.songCollection = db.collection<Song>(dbCollectionName);
 
         console.log(
-            `Successfully connected to database: ${db.databaseName} and collection: ${songsCollection.collectionName}`
+            `Successfully connected to database: ${db.databaseName} and collection: ${this.songCollection.collectionName}`
         );
     }
 

@@ -34,6 +34,7 @@ future plans:
     create cli for interacting with the system
 
 todo:
+    automate unit tests
 
     set up s3 bucket file upload integration tests
 
