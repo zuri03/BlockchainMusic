@@ -37,15 +37,10 @@ export default async function configureApp() : Promise<express.Application> {
 
         //all non GET request require authentication
         if (request.method !== 'GET' || request.path.includes('User')) {
-            console.log('ADDING AUTH HEADER');
-            
             request.headers.authorization = `Basic ${request.session.userid}`;
-
-            console.log('Auth header ' + request.get('authorization'))
         } 
 
         next();
-
     }, APIServicesProxyMiddleware);
 
     //Error handler middleware function

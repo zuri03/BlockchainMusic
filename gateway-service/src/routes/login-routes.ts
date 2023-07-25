@@ -66,7 +66,6 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
         //update and save the session
         request.session.userid = responseData['data'];
         request.session.save();
-
         response.status(200).json({ 'data': 'success' });
     } catch (error) {
         next(error);
