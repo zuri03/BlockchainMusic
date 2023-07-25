@@ -1,7 +1,10 @@
 import configureApp from './src/app.js';
+import UserDatabase from './src/db/database.js';
 
 (async function () {
-    const app = await configureApp();
+    const database = new UserDatabase();
+    await database.connectToDatabase();
+    const app = await configureApp(database);
 
     //temp port
     const PORT = 8008;
