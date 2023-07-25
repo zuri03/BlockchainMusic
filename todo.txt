@@ -73,15 +73,15 @@ todo:
         https://auth0.com/docs/api/authentication?http#introduction
 
     API Gateway:
-        express' session middleware is not meant for production (product configuration)
+        express' session middleware is not meant for production 
             - search for a compatible session store to pair with the middlware (research)
         look into session hijacking prevention techniques (research)
+        add unit tests
 
     blockchain service:
         securing data stored in smart contracts (research)
         hash userid for dynamodb
         improve security of smart contract https://docs.soliditylang.org/en/v0.8.21/security-considerations.html#clearing-mappings
-
 
 
          
