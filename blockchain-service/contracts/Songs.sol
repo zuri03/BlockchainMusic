@@ -11,7 +11,7 @@ contract Songs {
     address payable private author;
     
     //mapping songid => song data
-    mapping (string songid => bytes songData) private songDataRepository;
+    mapping (string => bytes) private songDataRepository;
 
     modifier restrictAccess () {
         require(msg.sender == owner, "Must be owner to access this operation");

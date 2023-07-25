@@ -5,7 +5,7 @@ import configureApp from './src/app';
 (function () {
 
     //configure the dynamo clinet to connect to dynamodb
-    configureDynamoDBClient();
+    //configureDynamoDBClient();
 
     //Connect the deployer on startup, the instance is not needed here
     SmartContractDeployer.getDeployerInstance();

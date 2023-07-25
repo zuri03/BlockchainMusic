@@ -17,7 +17,7 @@ export default function configureApp(): express.Application {
 
     app.use(bodyParser.json());
 
-    app.use('/api/address', addressRouter)
+    app.use('/api/Address', addressRouter)
 
     app.use(customErrorHandler);
 

@@ -27,14 +27,14 @@ router.post('/', checkAndValidateAuthorizationHeader, authorizeReqest, async (re
         }
 
         //deploy a new smart contract
-        //const smartContractDeployer: SmartContractDeployer = SmartContractDeployer.getDeployerInstance();
-        //const smartContractAddress: string = smartContractDeployer.deploySmartContract();
+        const smartContractDeployer: SmartContractDeployer = SmartContractDeployer.getDeployerInstance();
+        const smartContractAddress: string = await smartContractDeployer.deploySmartContract();
 
         //create a new entry key: userid, value: contract address
-        await dynamo.createDBEntry(userid, 'placeholder address');
+        await dynamo.createDBEntry(userid, smartContractAddress);
 
         //return success response including the new entry
-        response.status(200).json({ 'data': { userid, 'address': 'placeholder address' } })
+        response.status(200).json({ 'data': { userid, 'address': smartContractAddress } })
     } catch (error) {
         next(error);
     }
