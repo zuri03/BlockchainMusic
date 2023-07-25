@@ -24,6 +24,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN  npm install 
 
+RUN addgroup -S appgroup && adduser \
+     --system --ingroup appgroup -D appuser
+USER appuser
+
 #copy the build folder from the last stage
 COPY --from=build /usr/src/app/build ./build
 
