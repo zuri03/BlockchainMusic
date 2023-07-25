@@ -22,12 +22,13 @@ ENV NODE_ENV=development
 
 WORKDIR /usr/src/app
 
-RUN groupadd -r appuser && useradd appuser
-USER appuser
-
 #copy package.json again and install dependencies
 COPY package*.json ./
 RUN  npm install 
+
+RUN addgroup -S appgroup && adduser \
+     --system --ingroup appgroup -D appuser
+USER appuser
 
 #copy the build folder from the last stage
 COPY --from=build /usr/src/app/build ./build
