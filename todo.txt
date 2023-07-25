@@ -44,8 +44,6 @@ todo:
     
     create README
 
-    update node version to remove 'unsupported engine' warnings
-
     implement nodejs security practices:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
     
@@ -53,16 +51,9 @@ todo:
         https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html
 
     song-service:
-        increase security of mongo instance (research)
-        mock external db for tests (research)
-            create db interface 
-            refactor current db to implement that interface
-            create mockdb to also implement the interface
-        finish adding tests for all routes (depends on mock db)
         add a input handling/cleaning library (express-validator)
         improve security of docker container (research)
         cache the totalCount so that an extra db query is not needed on every Request
-        configure jest to work with ObjectID
         
     static file server: 
         improve the look of each page and the site theme

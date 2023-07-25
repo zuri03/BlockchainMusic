@@ -18,7 +18,12 @@ RUN npm run build
 
 FROM node:19-alpine3.16
 
+ENV NODE_ENV=development
+
 WORKDIR /usr/src/app
+
+RUN groupadd -r appuser && useradd appuser
+USER appuser
 
 #copy package.json again and install dependencies
 COPY package*.json ./
