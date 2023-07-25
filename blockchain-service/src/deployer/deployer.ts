@@ -1,5 +1,4 @@
 //https://docs.soliditylang.org/en/v0.5.0/using-the-compiler.html#compiler-input-and-output-json-description
-import solc from 'solc'
 import web3 from 'web3';
 import fs from 'fs';
 
@@ -19,26 +18,13 @@ export default class SmartContractDeployer {
         //connect web3 to truffle
         this.web3Provider = new web3('http://127.0.0.1:7545');
 
-        //read contract
-        const contractByteContent = fs.readFileSync('../../contracts/Songs.sol', 'utf8');
+        const contractJson = fs.readFileSync('./build/contracts/Songs.json', 'utf8');
 
-        const compilerInput = {
-            language: 'Solidity',
-            sources: {
-                'Songs.sol': { content: contractByteContent }
-            },
-            settings: {
-                outputSelection: { '*': { '*': ['*'] } }
-            }
-        }
-
-        //compile
-        const { contracts } = JSON.parse(solc.compile(JSON.stringify(compilerInput)));
-        const contract = contracts['Songs.sol']['Songs'];
+        const { abi, bytecode } = JSON.parse(contractJson);
 
         //extract abi and bytecode
-        this.contractAbi = contract['abi'];
-        this.contractByteCode = contract['evm']['bytecode']['object'];
+        this.contractAbi = abi;
+        this.contractByteCode = bytecode;
 
         //get the first account
         this.web3Provider.eth.getAccounts()
@@ -53,7 +39,7 @@ export default class SmartContractDeployer {
         return this.DeployerIntance;
     }
 
-    async deploySmartContract(): Promise<string | undefined> {
+    async deploySmartContract(): Promise<string> {
 
         //ensure this.account is defined
         if (!this.account) {
@@ -64,7 +50,11 @@ export default class SmartContractDeployer {
         const result = await new this.web3Provider.eth.Contract(this.contractAbi)
             .deploy({ data: this.contractByteCode })
             .send({ from: this.account, gas: '1000000' });
-            
+        
+        if (!result.options.address) {
+            throw new Error('Unable to deploy smart contract');
+        }
+        
         return result.options.address;
     }
 }
