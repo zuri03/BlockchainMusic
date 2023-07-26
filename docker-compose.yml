@@ -17,6 +17,7 @@ services:
   song-service:
     image: song-service
     environment:
+       - NODE_ENV=test 
        - MONGO_USERNAME=${MONGO_SONG_SERVICE_USERNAME}
        - MONGO_PASSWORD=${MONGO_SONG_SERVICE_PASSWORD}
        - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
@@ -46,6 +47,7 @@ services:
       context: ./user-service/.
       dockerfile: ./Dockerfile
     environment:
+      - NODE_ENV=test
       - MONGO_USERNAME=${MONGO_USER_SERVICE_USERNAME}
       - MONGO_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
       - MONGO_DB_NAME=${INIT_DATABASE}
@@ -63,21 +65,17 @@ services:
       - MONGO_USER_SERVICE_PASSWORD=${MONGO_USER_SERVICE_PASSWORD}
     volumes:
       - ./scripts/user-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  
+      
   blockchain-service:
     image: blockchain-service
     build:
       context: ./blockchain-service/.
       dockerfile: ./Dockerfile
     environment:
+      - NODE_ENV=test
       - GATEWAY_API_KEY=${GATEWAY_API_KEY}
       - DB_REGION=${AWS_REGION}
-      - GATEWAY_API_KEY=${GATEWAY_API_KEY}
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
     container_name: blockchain-container
     restart: unless-stopped
-    
-  
-  
-  

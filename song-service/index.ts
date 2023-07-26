@@ -13,7 +13,7 @@ import { S3BucketClient } from './src/types/app-types.js';
 
     const environment = process.env.NODE_ENV.trim();
 
-    if (environment === 'production' && !process.env.GATEWAY_API_KEY) {
+    if ((environment === 'production' || environment === 'test') && !process.env.GATEWAY_API_KEY) {
         throw new Error("Key not defined in the environemtn");
     }
 

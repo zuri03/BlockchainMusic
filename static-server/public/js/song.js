@@ -9,9 +9,44 @@ const titleError = function () {
 
 const tenSecondDelay = 10000;
 
+const submitSongCover = async function () {
+    const file = $('#cover-file')[0].files[0];
+    const data = new FormData();
+    data.append('cover-file', file);
+
+    $.ajax({
+        url: "http://localhost:9090/api/Cover",
+        data: data,
+        encType: 'multipart/form-data',
+        contentType: false,
+        processData: false,
+        cache: false,
+        method: 'POST',
+        success: function () {
+            alert('success')
+            $('#success-alert').show();
+            setTimeout(() => $('#success-alert').hide(), tenSecondDelay);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            $('#error-alert').show();
+            setTimeout(() => $('#error-alert').hide(), tenSecondDelay);
+            console.log({ xhr, textStatus, errorThrown })
+        }
+    });
+}
+
 $('#song-form').submit(function (event) {
     event.preventDefault();
-
+    submitSongCover();
+    /*
+    let songCoverUrl;
+    if ($('#cover-file').val() !== '') {
+        songCoverUrl = submitSongCover();
+        alert(songCoverUrl)
+    }
+    
+    */
+    /*
     const title = $('#song-title').val();
     const description = $('#song-description').val();
     const authorId = $('#author-id').val();
@@ -54,4 +89,5 @@ $('#song-form').submit(function (event) {
             console.log({ xhr, textStatus, errorThrown })
         }
     });
+    */
 });

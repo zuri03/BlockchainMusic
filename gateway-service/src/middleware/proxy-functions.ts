@@ -17,8 +17,10 @@ AUTHENTICATED API SERVICES: reqiures userid in the request
 export const APIServicesProxyMiddleware = createProxyMiddleware({
     changeOrigin: true,
     router: {
-        '/api/Song'                      : 'http://song-container:8888',   // path only
-        '/api/User'                      : 'http://user-contianer:8008'   // path only
+        '/api/Song': 'http://song-container:8888',   
+        '/api/Cover': 'http://song-container:8888',   
+        '/api/User': 'http://user-contianer:8008',  
+        '/api/Address': 'http://blockchain-contianer:9999'  
     },
     onProxyReq: (proxyReq, request, response) => proxyReq.setHeader("API-Key", process.env.API_KEY!),
     onError: (err, request, response, target) => {

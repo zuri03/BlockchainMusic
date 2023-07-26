@@ -71,7 +71,7 @@ export default async function configureApp(database: SongDB, s3Client: S3BucketC
     const coverController = new CoverController(s3Client);
     const coverRouter = initCoverRouter(coverController);
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
         app.use(validateAPIKey);
     }
 

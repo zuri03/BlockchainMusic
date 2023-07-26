@@ -16,6 +16,10 @@ export default class CoverController {
             return;
         }
 
+        console.log('got file name ' + file?.filename);
+        console.log('got field name ' + file?.fieldname);
+        console.log('got original name ' + file?.originalname);
+
         try {
             //send file to s3 bucket client
             const resourceURL: string = await this.client.uploadCoverFile(file);
