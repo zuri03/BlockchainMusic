@@ -26,6 +26,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN  npm install 
 
+#create app user and group
 RUN addgroup -S appgroup && adduser \
      --system --ingroup appgroup -D appuser
 USER appuser

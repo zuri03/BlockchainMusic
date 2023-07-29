@@ -44,7 +44,7 @@ todo:
     
     create README
 
-    implement synchronized tokens to hinder CSRF
+    implement synchronized tokens
         - generate a token server-side on login
         - This token is returned to the user and stored in cookie
         - Every subsequent request must contain the token in a unique request header to perform privileged operations
