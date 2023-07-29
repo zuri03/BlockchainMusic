@@ -74,6 +74,7 @@ todo:
                 add funciton to download song (depends on blochain service)
     
     user/authentication service:
+        switch id back to mongo's _id
         https://auth0.com/docs/api/authentication?http#introduction
         username is no longer going to be unique    
             - to authenicate we must search db based on username and try to find a match between the plaintext password and the hashed passwords returned from the db
@@ -90,7 +91,7 @@ todo:
         improve security of smart contract https://docs.soliditylang.org/en/v0.8.21/security-considerations.html#clearing-mappings
 
 
-      blockchain-service:
+blockchain-service:
     image: blockchain-service
     build:
       context: ./blockchain-service/.
@@ -103,3 +104,30 @@ todo:
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
     container_name: blockchain-container
     restart: unless-stopped
+
+song-service:
+    image: song-service
+    environment:
+       - NODE_ENV=test 
+       - MONGO_USERNAME=${MONGO_SONG_SERVICE_USERNAME}
+       - MONGO_PASSWORD=${MONGO_SONG_SERVICE_PASSWORD}
+       - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
+       - AWS_BUCKET_REGION=${AWS_REGION}
+       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+       - GATEWAY_API_KEY=${GATEWAY_API_KEY}
+    build:
+      context: ./song-service/.
+      dockerfile: ./Dockerfile
+    depends_on:
+      - song-mongo
+    container_name: song-container
+    restart: unless-stopped
+
+  song-mongo:
+    image: mongo:latest
+    env_file:
+      - .env
+    volumes:
+      - ./scripts/music-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

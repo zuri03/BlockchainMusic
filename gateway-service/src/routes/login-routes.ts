@@ -31,6 +31,11 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
 
     const authorizationHeader: string = request.get('authorization')!;
 
+    if (authorizationHeader.split(" ").length !== 2) {
+        response.status(400).json({ 'error': `auth header malformed` });
+        return;
+    }
+
     //Basic username:password
     const [ username, password ] = authorizationHeader.split(" ")[1].split(":");
 
