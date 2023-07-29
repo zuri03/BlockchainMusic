@@ -66,16 +66,3 @@ services:
     volumes:
       - ./scripts/user-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       
-  blockchain-service:
-    image: blockchain-service
-    build:
-      context: ./blockchain-service/.
-      dockerfile: ./Dockerfile
-    environment:
-      - NODE_ENV=test
-      - GATEWAY_API_KEY=${GATEWAY_API_KEY}
-      - DB_REGION=${AWS_REGION}
-      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
-    container_name: blockchain-container
-    restart: unless-stopped

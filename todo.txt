@@ -44,6 +44,11 @@ todo:
     
     create README
 
+    implement synchronized tokens to hinder CSRF
+        - generate a token server-side on login
+        - This token is returned to the user and stored in browser's sessionStorage
+        - Every subsequent request must contain the token in a unique request header to perform privileged operations
+
     implement nodejs security practices:
         https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
     
@@ -71,16 +76,31 @@ todo:
     
     user/authentication service:
         https://auth0.com/docs/api/authentication?http#introduction
+        username is no longer going to be unique    
+            - to authenicate we must search db based on username and try to find a match between the plaintext password and the hashed passwords returned from the db
 
     API Gateway:
         express' session middleware is not meant for production 
             - search for a compatible session store to pair with the middlware (research)
         look into session hijacking prevention techniques (research)
         add unit tests
+        add support for CSRF tokens
 
     blockchain service:
         securing data stored in smart contracts (research)
         improve security of smart contract https://docs.soliditylang.org/en/v0.8.21/security-considerations.html#clearing-mappings
 
 
-        
+      blockchain-service:
+    image: blockchain-service
+    build:
+      context: ./blockchain-service/.
+      dockerfile: ./Dockerfile
+    environment:
+      - NODE_ENV=test
+      - GATEWAY_API_KEY=${GATEWAY_API_KEY}
+      - DB_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+    container_name: blockchain-container
+    restart: unless-stopped

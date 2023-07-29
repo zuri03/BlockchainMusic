@@ -9,57 +9,20 @@ const titleError = function () {
 
 const tenSecondDelay = 10000;
 
-const submitSongCover = async function () {
-    const file = $('#cover-file')[0].files[0];
-    const data = new FormData();
-    data.append('cover-file', file);
-
-    $.ajax({
-        url: "http://localhost:9090/api/Cover",
-        data: data,
-        encType: 'multipart/form-data',
-        contentType: false,
-        processData: false,
-        cache: false,
-        method: 'POST',
-        success: function () {
-            alert('success')
-            $('#success-alert').show();
-            setTimeout(() => $('#success-alert').hide(), tenSecondDelay);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            $('#error-alert').show();
-            setTimeout(() => $('#error-alert').hide(), tenSecondDelay);
-            console.log({ xhr, textStatus, errorThrown })
-        }
-    });
-}
-
-$('#song-form').submit(function (event) {
-    event.preventDefault();
-    submitSongCover();
-    /*
-    let songCoverUrl;
-    if ($('#cover-file').val() !== '') {
-        songCoverUrl = submitSongCover();
-        alert(songCoverUrl)
-    }
-    
-    */
-    /*
+const submitSongMetaData = function (songCoverUrl) {
     const title = $('#song-title').val();
     const description = $('#song-description').val();
-    const authorId = $('#author-id').val();
-    const author = $('#author-name').val();
+
+    //TODO: determine how to handle authorId
+    //const authorId = $('#author-id').val();
+    const authorId = 'authorId'
+
+    //TODO: Author name will come from sessionStorage
+    //const author = $('#author-name').val();
+    const author = 'author name';
 
     if (!title || title.length === 0) {
         titleError();
-        return;
-    }
-
-    if (!author || !author.length || !authorId || !authorId.length) {
-        $('#error-alert').show();
-        setTimeout(() => $('#error-alert').hide(), 5000);
         return;
     }
 
@@ -69,13 +32,17 @@ $('#song-form').submit(function (event) {
         authorId
     }
 
-    if (description && description !== '') {
+    if (description) {
         requestObj['description'] = description;
+    }
+
+    if (songCoverUrl) {
+        requestObj['coverURL'] = songCoverUrl;
     }
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8888/api/Song",
+        url: "http://localhost:9090/api/Song",
         data: JSON.stringify(requestObj),
         contentType: "application/json; charset=utf-8",
         success: function () {
@@ -89,5 +56,38 @@ $('#song-form').submit(function (event) {
             console.log({ xhr, textStatus, errorThrown })
         }
     });
-    */
+}
+
+const submitSongCover = function () {
+    const file = $('#cover-file')[0].files[0];
+    const data = new FormData();
+    data.append('cover-file', file);
+
+    $.ajax({
+        url: "http://localhost:9090/api/Cover",
+        data: data,
+        encType: 'multipart/form-data',
+        contentType: false,
+        processData: false,
+        cache: false,
+        method: 'POST',
+        success: function (result) {
+            console.log(result);
+            submitSongMetaData(result['data']);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            $('#error-alert').show();
+            setTimeout(() => $('#error-alert').hide(), tenSecondDelay);
+            console.log({ xhr, textStatus, errorThrown })
+        }
+    });
+}
+
+$('#song-form').submit(function (event) {
+    event.preventDefault();
+    if ($('#cover-file').val() !== '') {
+        submitSongCover();
+    } else {
+        submitSongMetaData();
+    }
 });
