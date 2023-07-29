@@ -1,10 +1,9 @@
 import * as mongoDB from "mongodb";
 import Song from "../models/song";
-import { SongDB, Paging } from '../types/app-types';
+import { SongDB } from '../types/app-types';
+import cache from 'memory-cache';
 
-const PAGE_LIMIT = 100;
-const DEFAULT_OFFSET = 0;
-const DEFAULT_PAGE_SIZE = 10;
+const DOCUMENT_COUNT_KEY = "document_key";
 
 export default class SongServiceDatabase implements SongDB {
 
@@ -38,16 +37,16 @@ export default class SongServiceDatabase implements SongDB {
         );
     }
 
-    async totalDocumentCount(): Promise<number> {
-        return await this.songCollection!.countDocuments();
+    totalDocumentCount(): number {
+        return cache.get(DOCUMENT_COUNT_KEY) as number;
     }
 
-    async getSongs(offset?: number, pageSize?: number): Promise<Song[]> {
+    async getSongs(offset: number, pageSize: number): Promise<Song[]> {
 
         const songs = await this.songCollection!.find({})
             .sort({ title: 1 })
-            .skip(offset || DEFAULT_OFFSET)
-            .limit(pageSize || DEFAULT_PAGE_SIZE)
+            .skip(offset)
+            .limit(pageSize)
             .toArray();
 
         return songs;
@@ -61,7 +60,7 @@ export default class SongServiceDatabase implements SongDB {
     }
 
     //getSongsBySearch
-    async getSongsBySearchTerm(searchTerm: string, offset?: number, pageSize?: number): Promise<Song[]> {
+    async getSongsBySearchTerm(searchTerm: string, offset: number, pageSize: number): Promise<Song[]> {
         const mongoQuery = { 
             $or: [
                 { author: { $regex: `^${searchTerm}`, $options: 'i' } }, 
@@ -71,8 +70,8 @@ export default class SongServiceDatabase implements SongDB {
 
         const songs = await this.songCollection!.find(mongoQuery)
             .sort({ title: 1})
-            .skip(offset || DEFAULT_OFFSET)
-            .limit(pageSize || DEFAULT_PAGE_SIZE)
+            .skip(offset)
+            .limit(pageSize)
             .toArray();
         
         return songs;
@@ -90,25 +89,29 @@ export default class SongServiceDatabase implements SongDB {
 
         if (description) {
             newSong.description = description;
-        }
+        }   
 
+        const originalCount: number = this.totalDocumentCount();
         const queryExecutionResult = await this.songCollection!.insertOne(newSong);
 
         if (!queryExecutionResult) {
             throw new Error('Error executing insert query');
         }
+
+        cache.put(DOCUMENT_COUNT_KEY, originalCount + 1);
     }
     
     //deleteSong
     async deleteSong(songid: string): Promise<number> {
         const mongoQuery = {  _id: new mongoDB.ObjectId(songid) };
-
+        const originalCount: number = this.totalDocumentCount();
         const deletetionResult = await this.songCollection!.deleteOne(mongoQuery);
 
         if (!deletetionResult) {
             throw new Error('Error executing delete query');
         }
 
+        cache.put(DOCUMENT_COUNT_KEY, originalCount - 1);
         return deletetionResult.deletedCount;
     }
 

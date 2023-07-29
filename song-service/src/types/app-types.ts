@@ -12,7 +12,7 @@ export interface PaginatedResult {
 }
 
 export interface SongDB {
-    totalDocumentCount(): Promise<number>;
+    totalDocumentCount(): number;
     getSongs(offset?: number, pageSize?: number): Promise<Song[]>;
     getSongByID(songid: string): Promise<Song | undefined>;
     getSongsBySearchTerm(searchTerm: string, offset?: number, pageSize?: number): Promise<Song[]>;

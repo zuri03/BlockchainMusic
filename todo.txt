@@ -46,7 +46,7 @@ todo:
 
     implement synchronized tokens to hinder CSRF
         - generate a token server-side on login
-        - This token is returned to the user and stored in browser's sessionStorage
+        - This token is returned to the user and stored in cookie
         - Every subsequent request must contain the token in a unique request header to perform privileged operations
 
     implement nodejs security practices:
@@ -57,7 +57,6 @@ todo:
 
     song-service:
         add a input handling/cleaning library (express-validator)
-        cache the totalCount so that an extra db query is not needed on every Request
         
     static file server: 
         improve the look of each page and the site theme

@@ -12,7 +12,7 @@ export default class MockDB implements SongDB {
         }
     }
 
-    async totalDocumentCount(): Promise<number> {
+    totalDocumentCount(): number {
         return this.songs.length;
     }
     
