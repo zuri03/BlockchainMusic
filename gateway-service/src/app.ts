@@ -16,7 +16,7 @@ export default async function configureApp() : Promise<express.Application> {
         genid: (req) => crypto.randomUUID(),
         //resave may change in the future depending on session store
         resave: true,
-        secret: 'secrete', //process.env.SESSION_SECRET!,
+        secret: process.env.SESSION_SECRET!,
         //Set secure: true when changing to HTTPS
         cookie: { sameSite: 'lax', secure: false },
         saveUninitialized: true,
