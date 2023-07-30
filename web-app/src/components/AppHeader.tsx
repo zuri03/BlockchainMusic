@@ -18,10 +18,7 @@ export default function AppHeader({ isLoggedIn }: AppHeaderProps) {
                             <a className="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/user.html">User Profile</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/music.html">Music Management</a>
+                            <a className="nav-link" href="/music.html">Browse</a>
                         </li>
                     </ul>
                 </div>

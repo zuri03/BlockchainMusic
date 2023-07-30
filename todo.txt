@@ -57,21 +57,10 @@ todo:
 
     song-service:
         add a input handling/cleaning library (express-validator)
-        
-    static file server: 
-        improve the look of each page and the site theme
-        finish web pages:
-            user page:
-                create user signup form
 
-            browse music page:
-                set up donwload function for each song (depends on blochain service)
-                add pagination functionality
-            
-            song page:
-                improve the look of the song form
-                add function to load data for a song
-                add funciton to download song (depends on blochain service)
+    web-app:
+        react is not saving the cookie between requests
+        reduce image size on each song card
     
     user/authentication service:
         switch id back to mongo's _id
@@ -104,30 +93,3 @@ blockchain-service:
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
     container_name: blockchain-container
     restart: unless-stopped
-
-song-service:
-    image: song-service
-    environment:
-       - NODE_ENV=test 
-       - MONGO_USERNAME=${MONGO_SONG_SERVICE_USERNAME}
-       - MONGO_PASSWORD=${MONGO_SONG_SERVICE_PASSWORD}
-       - MONGO_DB_NAME=${MONGO_INITDB_DATABASE}
-       - AWS_BUCKET_REGION=${AWS_REGION}
-       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
-       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
-       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
-       - GATEWAY_API_KEY=${GATEWAY_API_KEY}
-    build:
-      context: ./song-service/.
-      dockerfile: ./Dockerfile
-    depends_on:
-      - song-mongo
-    container_name: song-container
-    restart: unless-stopped
-
-  song-mongo:
-    image: mongo:latest
-    env_file:
-      - .env
-    volumes:
-      - ./scripts/music-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

@@ -46,7 +46,8 @@ export default class SmartContractDeployer {
             const [ ownerAccount ] = await this.web3Provider.eth.getAccounts();
             this.account = ownerAccount;
         }
-
+        
+        //TODO: Determine proper gas amount
         const result = await new this.web3Provider.eth.Contract(this.contractAbi)
             .deploy({ data: this.contractByteCode })
             .send({ from: this.account, gas: '1000000' });

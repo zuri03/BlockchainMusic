@@ -3,7 +3,7 @@ db.createUser({
     pwd: encodeURIComponent(process.env.MONGO_SONG_SERVICE_PASSWORD),
     roles : [{ role: 'readWrite', db: 'songs' }]
 });
-/*
+
 db.songs.insertMany([
     {
       "title": "RETROTEX",
@@ -335,4 +335,4 @@ db.songs.insertMany([
       "createdAt": "2017-09-04T17:39:46.570Z"
     }
   ]);
-  */
+  
