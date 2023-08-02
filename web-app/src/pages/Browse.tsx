@@ -20,7 +20,7 @@ interface Paging {
 export default function Browse() {
     const [ songs, setSongs ] = useState<Song[]>([]);
     //TODO: set initial value for paging
-    const [ paging, setPaging ] = useState<Paging>({ offset: 0, pageSize: 10, totalCount: 50 });
+    const [ paging, setPaging ] = useState<Paging>({ offset: 0, pageSize: 10, totalCount: 100 });
 
     useEffect(() => {
         showLoader();
@@ -53,7 +53,7 @@ export default function Browse() {
         const response = await fetch(url);
         return await response.json();
     }
-
+    
     const submitSearch = function (event: any) {
         event.preventDefault();
         const searchTerm: string = event.target[0].value;

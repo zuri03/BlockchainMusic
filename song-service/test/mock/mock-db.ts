@@ -1,5 +1,6 @@
 import { SongDB } from '../../src/types/app-types';
 import Song from '../../src/models/song';
+import { ObjectId } from 'mongodb';
 
 export default class MockDB implements SongDB {
     private songs: Song[];
@@ -24,7 +25,7 @@ export default class MockDB implements SongDB {
     }
 
     async getSongByID(songid: string): Promise<Song | undefined> {
-        return this.songs.find(song => song['id']?.toString() === songid);
+        return this.songs.find(song => song['id']?.equals(new ObjectId(songid)));
     }
 
     async getSongsBySearchTerm(searchTerm: string, offset?: number, pageSize?: number): Promise<Song[]> {
@@ -35,9 +36,9 @@ export default class MockDB implements SongDB {
             .slice(start, end)
     }
 
-    async createSong(id: string, title: string, author: string, authorId: string, description?: string): Promise<void> {
+    async createSong(title: string, author: string, authorId: string, description?: string): Promise<void> {
         const song: Song = {
-            id,
+            id: new ObjectId(),
             title,
             author,
             authorId,
@@ -52,19 +53,17 @@ export default class MockDB implements SongDB {
     }
 
     async deleteSong(songid: string): Promise<number> {
-        const deletedElementIndex = this.songs.findIndex(song => song['id']?.toString() === songid);
-
+        const deletedElementIndex = this.songs.findIndex(song => song['id']?.equals(new ObjectId(songid)));
         if (deletedElementIndex === -1) {
             return 0;
         }
-
         this.songs.splice(deletedElementIndex, 1)[0];
 
         return 1;
     }
 
     async updateSong(songid: string, title: string, description?: string): Promise<void> {
-        const index = this.songs.findIndex(song => song['id']?.toString() === songid);
+        const index = this.songs.findIndex(song => song['id']?.equals(new ObjectId(songid)));
 
         const originalSong = this.songs[index];
         originalSong.title = title;

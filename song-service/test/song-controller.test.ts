@@ -4,36 +4,65 @@ import MockDB from './mock/mock-db';
 import MockClient from './mock/mock-s3Client';
 import 'jest';
 import { Application } from 'express';
+import { ObjectId } from 'mongodb';
 import Song from '../src/models/song';
 
 const initialData = [
     {
-        id: "0",
+        id: new ObjectId("64c9a947fc13ae1440af11ed"),
         title: 'title does not exist',
         authorId: 'myId',
         author: 'me',
         description: 'here is a desc'
     },
     {
-        id: "1",
+        id: new ObjectId("64c9a947fc13ae1440af1205"),
         title: 'title does not exist',
         authorId: 'my id',
         author: 'me',
         description: 'wow another description'
     },
     {
-        id: "2",
+        id: new ObjectId("64c9a947fc13ae1440af1218"),
         title: 'made up song',
         authorId: 'some authorid',
         author: 'some author'
     },
     {
-        id: "3",
+        id: new ObjectId("64c9a947fc13ae1440af1238"),
         title: 'made up song',
         authorId: 'aNewId',
         author: 'completely different author'
     }
 ]
+
+const checkEqualityOfResponse = function (response: any | any[], expectedResponse: Song | Song[]): boolean {
+    if (!Array.isArray(expectedResponse)) {
+        const expected = expectedResponse as Song;
+        const actual = response as any;
+        return expected.title === actual.title && expected.author === actual.author
+            && expected.authorId === actual.authorId && expected.id!.equals(new ObjectId(actual.id))
+    }
+
+    const expectedResponses = expectedResponse as Song[];
+    const actualResponses = response as any[];
+
+    if (expectedResponses.length !== actualResponses.length) {
+        return false;
+    }
+
+    for (let i = 0; i < expectedResponses.length; i++) {
+        const expected = expectedResponses[i];
+        const actual = actualResponses[i];
+        const match = expected.title === actual.title && expected.author === actual.author
+            && expected.authorId === actual.authorId && expected.id!.equals(new ObjectId(actual.id));
+        if (!match) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 describe('Testing API Keys', () => {
     const bucketName = 'coverBucket';
@@ -112,44 +141,33 @@ describe('Song routes read test', () => {
             .get("/api/Song")
             .set('API-Key', testKey)
             .expect(200);
-        expect(response.body.data).toBeDefined()
-        expect(response.body.data).toEqual(expectedResponse)
+        expect(response.body.data).toBeDefined();
+        expect(checkEqualityOfResponse(response.body.data, expectedResponse)).toEqual(true);
     });
     
     test('Get Song', async () => {
         const expectedResponse = initialData[0];
 
         const response = await request(app)
-            .get("/api/Song/0")
+            .get("/api/Song/64c9a947fc13ae1440af11ed")
             .set('API-Key', testKey)
             .expect(200);
         expect(response.body.data).toBeDefined();
-        expect(response.body.data).toEqual(expectedResponse);
+        expect(checkEqualityOfResponse(response.body.data, expectedResponse)).toEqual(true);
     });
     
     
     test('Search Song', async () => {
-        const expectedResponse = [{
-            id: "2",
-            title: 'made up song',
-            authorId: 'some authorid',
-            author: 'some author'
-        },
-        {
-            id: "3",
-            title: 'made up song',
-            authorId: 'aNewId',
-            author: 'completely different author'
-        }];
-
+        const expectedResponse = [ initialData[2], initialData[3]];
         const searchTerm = encodeURIComponent("made up song");
 
         const response = await request(app)
             .get(`/api/Song/Search/${searchTerm}`)
             .set('API-Key', testKey)
             .expect(200);
+
         expect(response.body.data).toBeDefined();
-        expect(response.body.data).toEqual(expectedResponse);
+        expect(checkEqualityOfResponse(response.body.data, expectedResponse)).toEqual(true);
     });
 });
 
@@ -216,20 +234,20 @@ describe('Song routes write tests', () => {
         expect(authorId).toEqual(requestBody.authorId);
         expect(description).toEqual(requestBody.description);
         expect(spy).toBeCalled();
-        expect(spy).toBeCalledWith(id, title, author, authorId, description);
+        expect(spy).toBeCalledWith(title, author, authorId, description);
     });
 
     test('Delete Song', async () => {
         const spy = jest.spyOn(db, 'deleteSong');
         await request(app)
-            .delete("/api/Song/0")
+            .delete("/api/Song/64c9a947fc13ae1440af11ed")
             .set('API-Key', testKey)
             .set("Authorization", `Basic myId`)
             .set('Accept', 'application/json')
             .expect(200);
         
         expect(spy).toBeCalled();
-        expect(spy).toBeCalledWith('0');
+        expect(spy).toBeCalledWith('64c9a947fc13ae1440af11ed');
 
         const response = await request(app)
             .get("/api/Song")
@@ -247,14 +265,13 @@ describe('Song routes write tests', () => {
     test('Update Song', async () => {
         const spy = jest.spyOn(db, 'updateSong');
         const updatedSong: Song = {
-            id: "0",
             title: 'brand new title',
             authorId: 'myId',
             author: 'me',
         };
 
         await request(app)
-            .put("/api/Song/0")
+            .put("/api/Song/64c9a947fc13ae1440af11ed")
             .send(updatedSong)
             .set('API-Key', testKey)
             .set("Authorization", `Basic myId`)
@@ -263,10 +280,10 @@ describe('Song routes write tests', () => {
         
         
         expect(spy).toBeCalled();
-        expect(spy).toBeCalledWith(updatedSong.id, updatedSong.title, updatedSong.description);
+        expect(spy).toBeCalledWith('64c9a947fc13ae1440af11ed', updatedSong.title, updatedSong.description);
 
         const response = await request(app)
-            .get("/api/Song/0")
+            .get("/api/Song/64c9a947fc13ae1440af11ed")
             .set('API-Key', testKey)
             .set('Accept', 'application/json')
             .expect(200); 

@@ -63,7 +63,6 @@ todo:
         reduce image size on each song card
     
     user/authentication service:
-        switch id back to mongo's _id
         https://auth0.com/docs/api/authentication?http#introduction
         username is no longer going to be unique    
             - to authenicate we must search db based on username and try to find a match between the plaintext password and the hashed passwords returned from the db

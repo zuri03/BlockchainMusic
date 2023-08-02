@@ -32,8 +32,6 @@ export const checkForAuthorizationHeader = function (request: Request, response:
         return;
     }
 
-    console.log('Got userid of ' + requestUserId)
-
     //setting it to the locals may not be necessary
     response.locals.userid = requestUserId;
     next();

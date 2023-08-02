@@ -1,6 +1,7 @@
 import * as mongoDB from "mongodb";
 import Song from "../models/song";
 import { SongDB } from '../types/app-types';
+import { ObjectId } from 'mongodb';
 import cache from 'memory-cache';
 
 const DOCUMENT_COUNT_KEY = "document_key";
@@ -54,7 +55,7 @@ export default class SongServiceDatabase implements SongDB {
 
     //getSongByID
     async getSongByID(songid: string): Promise<Song | undefined> {
-        const mongoQuery = { _id: new mongoDB.ObjectId(songid) };
+        const mongoQuery = { _id: new ObjectId(songid) };
         const song = await this.songCollection!.findOne(mongoQuery) as Song | undefined; 
         return song;
     }
@@ -78,9 +79,9 @@ export default class SongServiceDatabase implements SongDB {
     }
 
     //createSong
-    async createSong(id: string, title: string, author: string, authorId: string, description?: string): Promise<void> {
+    async createSong(title: string, author: string, authorId: string, description?: string): Promise<void> {
         const newSong: Song = {
-            id,
+            id: new ObjectId(),
             title,
             author,
             authorId,
@@ -103,7 +104,7 @@ export default class SongServiceDatabase implements SongDB {
     
     //deleteSong
     async deleteSong(songid: string): Promise<number> {
-        const mongoQuery = {  _id: new mongoDB.ObjectId(songid) };
+        const mongoQuery = {  _id: new ObjectId(songid) };
         const originalCount: number = this.totalDocumentCount();
         const deletetionResult = await this.songCollection!.deleteOne(mongoQuery);
 
@@ -129,7 +130,7 @@ export default class SongServiceDatabase implements SongDB {
         }
 
         const queryExecutionResult = await this.songCollection!.updateOne(
-            { _id: new mongoDB.ObjectId(songid) }, { $set: song });
+            { _id: new ObjectId(songid) }, { $set: song });
 
         if (!queryExecutionResult) {
             throw new Error('Unable to complete update query')

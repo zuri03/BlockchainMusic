@@ -13,6 +13,8 @@ const Container = function ({ child }: { child: any }) {
 }
 
 export default function SongPaginator({ offset, pageSize, totalCount }: Paging) {
+    alert('init song paginator')
+
     const navContainer = document.createElement('nav');
     navContainer.ariaLabel = 'Page navigation example';
     const ulContainer = document.createElement('ul');
