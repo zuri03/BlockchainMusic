@@ -9,7 +9,7 @@ export default class MockClient implements S3BucketClient {
         this.bucketRegion = bucketRegion;
     }
 
-    async uploadCoverFile(file: Express.Multer.File): Promise<string> {
+    uploadCoverFile(file: Express.Multer.File): string {
         return `https://${this.bucketName}.s3.${this.bucketRegion}.amazonaws.com/s3ObjectKey`;
     }
     

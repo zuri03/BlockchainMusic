@@ -22,6 +22,6 @@ export interface SongDB {
 }
 
 export interface S3BucketClient {
-    uploadCoverFile(file: Express.Multer.File): Promise<string>;
+    uploadCoverFile(file: Express.Multer.File): string;
     destroyS3BucketClient(): void;
 }
