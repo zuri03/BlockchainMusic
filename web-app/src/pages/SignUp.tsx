@@ -1,12 +1,26 @@
 export default function SignUp () {
+    const alertError = function (elementId: string): void {
+        document.getElementById(elementId)!.style.display = 'block';
+        setTimeout(() => document.getElementById(elementId)!.style.display = 'none', 5000);
+    }
 
-    const alertSignUpError = function () {
-        document.getElementById('error-alert')!.style.display = 'block';
-        setTimeout(() => document.getElementById('error-alert')!.style.display = 'none', 5000);
+    const validateFormInputs = function (): boolean {
+        const password = document.getElementById('password');
+        const confirmedPassword = document.getElementById('password-confirm');
+        if (password !== confirmedPassword) {
+            alertError('password-alert');
+            return false;
+        }
+        return true;
     }
 
     const submitSignUpForm = async function (event: any) {
         event.preventDefault();
+
+        if (!validateFormInputs()) {
+            return;
+        }
+
         const username = event.target[0].value;
         const password = event.target[1].value;
 
@@ -19,13 +33,16 @@ export default function SignUp () {
         });
         
         if (response.status !== 200) {
-            alertSignUpError();
+            alertError('error-alert');
         } 
     }
 
     return (
         <div className="container">
             <div className="row justify-content-center pt-5">
+                <div className="alert alert-danger" id="password-alert" style={{ display: 'none', width: '50%' }} role="alert">
+                    Passwords do not match!
+                </div>
                 <div className="alert alert-danger" id="error-alert" style={{ display: 'none' }} role="alert">
                     Oops, an error has occurred while creating a new account.
                 </div>
@@ -42,7 +59,7 @@ export default function SignUp () {
                                 <input type="password" className="form-control"  id="password" name="password" placeholder="password" aria-label="password"/>
                             </div>
                             <div className="row w-75 my-2">
-                                <input type="password" className="form-control" name="passwordConfirm" placeholder="confirm password" aria-label="confirm password"/>
+                                <input type="password" className="form-control" id="password-confirm" name="passwordConfirm" placeholder="confirm password" aria-label="confirm password"/>
                             </div>
                             <div className="row w-75 my-2">
                                 <button className="btn app-btn" type="submit">Sign Up</button>
