@@ -3,6 +3,7 @@ import AppHeader from './components/AppHeader';
 import './App.css';
 import Login from './pages/Login';
 import Browse from './pages/Browse';
+import SignUp from './pages/SignUp';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -20,6 +21,10 @@ function App() {
     {
       path: '/Browse',
       element: <Browse />
+    },
+    {
+      path: '/SignUp',
+      element: <SignUp />
     }
   ]);
 

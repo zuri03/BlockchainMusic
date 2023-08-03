@@ -30,7 +30,7 @@ export default class SongServiceS3Client implements S3BucketClient {
         this.s3BucketName = process.env.AWS_BUCKET_NAME!;
     }
 
-    async uploadCoverFile(file: Express.Multer.File): string {
+    uploadCoverFile(file: Express.Multer.File): string {
         const s3ObjectKey: string = randomUUID();
 
         const uploadFileCommand: PutObjectCommand = new PutObjectCommand({

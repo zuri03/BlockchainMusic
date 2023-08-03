@@ -56,6 +56,9 @@ export default function User({ notifyLogin }: LoginProps) {
                             <div className="row w-75 my-2">
                                 <button className="btn app-btn">Submit</button>
                             </div>
+                            <div className="row">
+                                <a style={{ fontSize: 'small' }} href="/SignUp">Dont have an account? Click here to sign up!</a>
+                            </div>
                         </div>
                     </form>
                 </div>
