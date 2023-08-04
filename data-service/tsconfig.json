@@ -1,5 +1,5 @@
 {
-    "exclude": [ "./coverage", "test" ],
+    "exclude": [ "./coverage", "./build", "test", "jest.config.cjs" ],
     "compilerOptions": {
         "types": [ "node", "express" ], 
         "target": "ES6",   
@@ -14,13 +14,7 @@
         "removeComments": true,
         "resolveJsonModule": true,
     },
-    "include": [
-        "./contracts/*.sol",
-        "./index.ts",
-        "solc.d.ts"
-    ],
-    /*
     "file": [
         "index.ts" 
-    ],*/
+    ],
 }

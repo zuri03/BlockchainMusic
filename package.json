@@ -18,7 +18,11 @@
   "homepage": "https://github.com/zuri03/BlockchainMusic#readme",
   "devDependencies": {
     "@types/jest": "^29.5.2",
+    "@types/multer": "^1.4.7",
     "@types/supertest": "^2.0.12",
     "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "help": "^3.0.2"
   }
 }
