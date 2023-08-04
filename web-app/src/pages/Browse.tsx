@@ -50,7 +50,10 @@ export default function Browse() {
         const url = searchTerm ? 
             `http://localhost:9090/api/Song/Search/${searchTerm}`:
             'http://localhost:9090/api/Song';
-        const response = await fetch(url);
+        const response = await fetch(url, { 
+            credentials: "include",
+            mode: 'cors'
+        });
         return await response.json();
     }
     

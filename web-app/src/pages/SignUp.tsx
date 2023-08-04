@@ -26,6 +26,8 @@ export default function SignUp () {
 
         const response = await fetch('http://localhost:9090/api/User', {
             method: 'POST',
+            credentials: "include",
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json'
             },

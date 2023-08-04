@@ -18,18 +18,19 @@ export default function User({ notifyLogin }: LoginProps) {
         event.preventDefault();
         const username = event.target[0].value;
         const password = event.target[1].value;
-        const fetchOptions = {
+
+        fetch('http://localhost:9090/login', {
             method: 'POST',
+            credentials: "include",
+            mode: 'cors',
             headers: new Headers({
                 'authorization': `Basic ${username}:${password}`
             })
-        };
-
-        fetch('http://localhost:9090/login', fetchOptions)
-            .then(response => {
-                response.status === 200 ? notifyLogin() : alertLoginError();
-            })
-            .catch(error => alertServerError());
+        })
+        .then(response => {
+            response.status === 200 ? notifyLogin() : alertLoginError();
+        })
+        .catch(error => alertServerError());
     }
 
     return (

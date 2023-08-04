@@ -51,13 +51,11 @@ const initAuthRouter = function (controller: AuthController): Router {
 }
 
 export default async function configureApp(database: UserDB) : Promise<Application> {
-
     const app : Application = express();
     const userController = new UserController(database);
     const authController = new AuthController(database);
     const userRouter = initUserRouter(userController);
     const authRouter = initAuthRouter(authController);
-    
 
     app.use(validateAPIKey);
 

@@ -10,7 +10,11 @@ export default async function configureApp() : Promise<express.Application> {
 
     const app : express.Application = express();
 
-    app.use(cors());
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        methods: [ 'GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'PATCH' ],
+        credentials: true
+    }));
     
     app.use(session({
         genid: (req) => crypto.randomUUID(),
