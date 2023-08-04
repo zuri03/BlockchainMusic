@@ -50,9 +50,6 @@ todo:
                     - ensure the token supplied in the request header matches the token in the key/value store
                 - return data
 
-
-                
-
         - change dynamo to store (songid => s3 song data url) instead of (songid => contract address)
 
     automate unit tests
