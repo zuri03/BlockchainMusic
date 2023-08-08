@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import { customErrorHandler, validateAPIKey } from './middleware/middleware-functions';
 import DataController from './controllers/data-controller';
+import path from 'path';
 
 const initRouter = function (controller: DataController): Router {
     const router = Router();
@@ -18,9 +19,9 @@ const initRouter = function (controller: DataController): Router {
         next();
     });
 
-    router.get('/:id', controller.getFile.bind(controller));
-    router.post('/', controller.createFile.bind(controller));
-    router.delete('/:id', controller.deleteFile.bind(controller));
+    router.get('/:authorid/:songid', controller.getFile.bind(controller));
+    router.post('/:authorid/:songid', controller.createFile.bind(controller));
+    router.delete('/:authorid/:songid', controller.deleteFile.bind(controller));
 
     return router;
 }
@@ -28,18 +29,22 @@ const initRouter = function (controller: DataController): Router {
 export default function configureApp(): express.Application {
     const app: express.Application = express();
     const upload = multer();
-    //TEMP PATH
-    const controller = new DataController('');
+    const controller = new DataController(path.join(process.cwd(), 'songs'));
     const router = initRouter(controller);
-
-    app.use(validateAPIKey);
-
-    app.use('/api/SongFile', upload.single('song-file'), router);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {
         console.log(`INFO: ${request.method}: URL: ${request.url}`);
         next();
+    });
+
+    //app.use(validateAPIKey);
+
+    app.use('/api/File', upload.single('song-file'), router);
+
+    app.use((request, response, next) => {
+        response.status(404).json({ 'error': 'unsupported route'});
+        return;
     });
 
     app.use(bodyParser.json());

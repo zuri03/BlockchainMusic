@@ -8,9 +8,13 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc --build --force ./tsconfig.json && truffle compile",
+    "build": "tsc --build --force ./tsconfig.json",
     "deploy": "npm run build && npm run start",
-    "start": "node ./build/index.js"
+    "start": "node ./build/index.js",
+    "docker-build": "docker build -t data-service:v1 --file Dockerfile .",
+    "docker-start": "docker run -p9999:9999 -d --name data-service-container data-service:v1",
+    "docker-run": "npm run docker-build && npm run docker-start",
+    "docker-remove": "docker stop data-service-container && docker rm data-service-container && docker rmi --force data-service:v1"
   },
   "author": "shawzuri1027@gmail.com",
   "license": "ISC",

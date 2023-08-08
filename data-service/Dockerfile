@@ -1,7 +1,7 @@
 #replace with the latest verison of node
 FROM node:latest AS build
 
-WORKDIR /usr/src/app
+WORKDIR /opt/app
 
 #copy package.json and tsconfig.json file
 COPY package*.json ./
@@ -20,7 +20,7 @@ FROM node:19-alpine3.16
 
 ENV NODE_ENV=development
 
-WORKDIR /usr/src/app
+WORKDIR /opt/app
 
 #copy package.json again and install dependencies
 COPY package*.json ./
@@ -28,10 +28,15 @@ RUN  npm install
 
 RUN addgroup -S appgroup && adduser \
      --system --ingroup appgroup -D appuser
+
+RUN mkdir -m=rwx songs
+
+RUN chown -R appuser:appgroup /opt/app/songs
+
 USER appuser
 
 #copy the build folder from the last stage
-COPY --from=build /usr/src/app/build ./build
+COPY --from=build /opt/app/build ./build
 
 #expose the proper port and start
 EXPOSE 9999

@@ -34,6 +34,10 @@ future plans:
     create cli for interacting with the system
 
 todo:
+    add versioning to npm packages and dockerfiles
+    
+    research audio file types and determine which type to use for applicaiton
+
     move song data off the blockchain
         - files are stored in the filesystem
         - a controller will govern access to the files
