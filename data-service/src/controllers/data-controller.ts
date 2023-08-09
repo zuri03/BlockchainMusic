@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import path from 'path';
+import NodeCache from 'node-cache';
 
-//TODO: Implement authorization functionality
 export default class DataController {
     private songFilesRootPath: string;
+    private requestTokenCache: NodeCache;
 
-    constructor(songFilesRootPath: string) {
+    constructor(songFilesRootPath: string, requestTokenCache: NodeCache) {
+        this.requestTokenCache = requestTokenCache;
         this.songFilesRootPath = songFilesRootPath;
 
         if (!fs.existsSync(this.songFilesRootPath)) {
@@ -15,11 +17,34 @@ export default class DataController {
     }
 
     getFile(request: Request, response: Response, next: NextFunction) {
-        console.log(request.params)
-        const songid = request.params.sonid;
+        const songid = request.params.songid;
         const authorid = request.params.authorid;
         if (!songid || !authorid) {
             response.status(400).json({ 'error': 'required values missing from request' });
+            return;
+        }
+
+        //authorize request by pulling required values and ensuring a match
+        const requestUserId: string = request.get('authorization')!.split(" ")[1];
+        if (!requestUserId) {
+            response.status(403).json({ 'error': 'values missing from auth header' });
+            return;
+        }
+
+        const cacheEntryValue = this.requestTokenCache.get(requestUserId);
+        if (!cacheEntryValue) {
+            response.status(403).json({ 'error': 'token not in cache' });
+            return;
+        }
+
+        const resourceToken = request.get('resource-token');
+        if (!resourceToken) {
+            response.status(403).json({ 'error': 'missing required values' });
+            return;
+        }
+
+        if (resourceToken !== cacheEntryValue) {
+            response.status(403).json({ 'error': 'tokens do not match' });
             return;
         }
 
@@ -37,12 +62,22 @@ export default class DataController {
     }
 
     createFile(request: Request, response: Response, next: NextFunction) {
-        console.log(request.params)
         const songid = request.params.songid;
         const authorid = request.params.authorid;
         const file = request.file;
         if (!file || !songid || !authorid) {
             response.status(400).json({ 'error': 'required values missing from request' });
+            return;
+        }
+
+        const requestUserId: string = request.get('authorization')!.split(" ")[1];
+        if (!requestUserId) {
+            response.status(400).json({ 'error': 'values missing from auth header' });
+            return;
+        }
+
+        if (requestUserId !== authorid) {
+            response.status(403).json({ 'error': 'not authorized to perform this action' });
             return;
         }
 
@@ -68,9 +103,20 @@ export default class DataController {
     }
 
     deleteFile(request: Request, response: Response, next: NextFunction) {
-        console.log(request.params)
-        const songid = request.params.sonid;
+        const songid = request.params.songid;
         const authorid = request.params.authorid;
+
+        const requestUserId: string = request.get('authorization')!.split(" ")[1];
+        if (!requestUserId) {
+            response.status(400).json({ 'error': 'values missing from auth header' });
+            return;
+        }
+
+        if (requestUserId !== authorid) {
+            response.status(403).json({ 'error': 'not authorized to perform this action' });
+            return;
+        }
+
         const songFilePath = path.join(this.songFilesRootPath, authorid, songid);
         if (!fs.existsSync(songFilePath)) {
             response.status(404).json({ 'error': 'song not found' });

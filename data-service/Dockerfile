@@ -27,10 +27,8 @@ COPY package*.json ./
 RUN  npm install 
 
 RUN addgroup -S appgroup && adduser \
-     --system --ingroup appgroup -D appuser
-
-RUN mkdir -m=rwx songs
-
+    --system --ingroup appgroup -D appuser
+RUN mkdir -m=rw songs
 RUN chown -R appuser:appgroup /opt/app/songs
 
 USER appuser
