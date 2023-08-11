@@ -2,8 +2,6 @@
 FROM node:latest AS build
 
 WORKDIR /opt/app
-
-#copy package.json and tsconfig.json file
 COPY package*.json ./
 COPY tsconfig.json ./
 
@@ -18,11 +16,13 @@ RUN npm run build
 
 FROM node:19-alpine3.16
 
+#Add the cleaning cronjob to the daily folder
+COPY ./scripts/song-folder-cleaner.sh /etc/periodic/daily/.
+
+#set env variabls
 ENV NODE_ENV=development
 
 WORKDIR /opt/app
-
-#copy package.json again and install dependencies
 COPY package*.json ./
 RUN  npm install 
 
@@ -30,7 +30,6 @@ RUN addgroup -S appgroup && adduser \
     --system --ingroup appgroup -D appuser
 RUN mkdir -m=rw songs
 RUN chown -R appuser:appgroup /opt/app/songs
-
 USER appuser
 
 #copy the build folder from the last stage

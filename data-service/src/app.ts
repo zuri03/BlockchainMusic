@@ -3,8 +3,6 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import { customErrorHandler, validateAPIKey } from './middleware/middleware-functions';
 import DataController from './controllers/data-controller';
-import path from 'path';
-import NodeCache from 'node-cache';
 
 const initRouter = function (controller: DataController): Router {
     const router = Router();
@@ -27,11 +25,10 @@ const initRouter = function (controller: DataController): Router {
     return router;
 }
 
-export default function configureApp(): express.Application {
+export default function configureApp(controller: DataController): express.Application {
     const app: express.Application = express();
     const upload = multer();
-    const controller = new DataController(
-        path.join(process.cwd(), 'songs'), new NodeCache({ stdTTL: 120 }));
+    
     const router = initRouter(controller);
     
     //Simple and temporary request logger
