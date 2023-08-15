@@ -28,8 +28,9 @@ RUN  npm install
 
 RUN addgroup -S appgroup && adduser \
     --system --ingroup appgroup -D appuser
-RUN mkdir -m=rw songs
+RUN mkdir -m=rwx songs
 RUN chown -R appuser:appgroup /opt/app/songs
+RUN chown -R appuser:appgroup /etc/periodic/daily/song-folder-cleaner.sh
 USER appuser
 
 #copy the build folder from the last stage

@@ -29,4 +29,7 @@ import AuthConsumer from './src/auth/auth-consumer';
     process.on('SIGTERM', () => gracefulServerShutdown('SIGTERM'));
     process.on('SIGINT', () => gracefulServerShutdown('SIGINT'));
 })();
-
+/*
+#FILECOUNT=$(find /opt/app/songs -type f -maxdepth 1 -print | wc -c)
+#echo "FILECOUNT: " $FILECOUNT
+*/

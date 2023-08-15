@@ -26,10 +26,6 @@ todo:
     
     research audio file types and determine which type to use for applicaiton
 
-    create a mechanism to efficiently delete unused directories in the song directory
-        - a user uploads a song and then deletes it 
-        - the directory containing the user songs will still exists despite the fact it no longer holds any song files
-
     move song data off the blockchain
         - a controller will govern access to the files
             - Authorization method:
