@@ -1,14 +1,35 @@
-import express from 'express';
+import express, { Router, Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
 import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
 import { APIServicesProxyMiddleware } from './middleware/proxy-functions';
-import loginRouter from './routes/login-routes';
+import LoginController from './controllers/login-controller';
+import sendLoginRequest from './auth';
 
-export default async function configureApp() : Promise<express.Application> {
+const initRouter = function (controller: LoginController): Router {
+    const router = Router();
 
-    const app : express.Application = express();
+    router.use((request: Request, response: Response, next: NextFunction) => {
+        const method: string = request.method;
+        
+        if (method !== 'POST') {
+            response.status(405).json({ 'error': 'method not supported' });
+            return;
+        }
+        
+        next();
+    });
+
+    router.post('/', controller.login.bind(controller));
+    return router;
+}
+
+export default async function configureApp() : Promise<Application> {
+
+    const app : Application = express();
+    const controller = new LoginController(sendLoginRequest);
+    const router = initRouter(controller);
 
     app.use(cors({
         origin: 'http://localhost:3000',
@@ -27,13 +48,7 @@ export default async function configureApp() : Promise<express.Application> {
         unset: 'destroy'
     }));
 
-    app.use(loginRouter);
-
-    //body parser breaks the proxy
-    //app.use(bodyParser.json());
-
-    //move checking userid logic to the individual services
-    //app.use(checkForUserid)
+    app.use('/login', router);
 
     //Simple and temporary request logger
     app.use((request, response, next) => {

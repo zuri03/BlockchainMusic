@@ -26,18 +26,7 @@ todo:
     
     research audio file types and determine which type to use for applicaiton
 
-    move song data off the blockchain
-        - a controller will govern access to the files
-            - Authorization method:
-                - a transaction is processed by a payment service
-                - payment service generates token
-                - payment service returns token to user
-                - payment service sends message to the song data service
-                    - real time message brokeer
-                    - message contains userid and their token 
-                - user sends request to download song
-                    - ensure the token supplied in the request header matches the token in the key/value store
-                - return data
+    create payment service
 
     automate unit tests
 

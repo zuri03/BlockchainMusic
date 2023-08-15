@@ -10,6 +10,7 @@ import { CustomErrorHandler, validateAPIKey } from './middleware/middleware-func
 import UserController from './controllers/user-controller';
 import AuthController from './controllers/auth-controller';
 import { UserDB } from './types/app-types';
+import helmet from 'helmet';
 
 const initUserRouter = function (controller: UserController): Router {
     const router: Router = Router();
@@ -57,6 +58,7 @@ export default async function configureApp(database: UserDB) : Promise<Applicati
     const userRouter = initUserRouter(userController);
     const authRouter = initAuthRouter(authController);
 
+    app.use(helmet());
     app.use(validateAPIKey);
 
     //Simple and temporary request logger

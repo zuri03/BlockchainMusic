@@ -16,6 +16,7 @@ import {
     validateAPIKey 
 } from './middleware/middleware';
 import { SongDB, S3BucketClient } from './types/app-types';
+import helmet from 'helmet';
 
 const FILE_UPLOAD_MAX_SIZE = 40000;
 
@@ -70,6 +71,8 @@ export default async function configureApp(database: SongDB, s3Client: S3BucketC
     const songRouter = initSongRouter(songController);
     const coverController = new CoverController(s3Client);
     const coverRouter = initCoverRouter(coverController);
+
+    app.use(helmet());
 
     if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
         app.use(validateAPIKey);
