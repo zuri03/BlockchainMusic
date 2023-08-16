@@ -48,17 +48,20 @@ export default async function configureApp() : Promise<Application> {
         unset: 'destroy'
     }));
 
+    app.use((request, response, next) => {
+        console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: ${request.session.userid}`);
+        next();
+    });
+
     app.use('/login', router);
 
     //Simple and temporary request logger
+    
     app.use((request, response, next) => {
-        //console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: ${request.session.userid}`);
-        console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: exampleUserId`);
 
         //all non GET request require authentication
         if (request.method !== 'GET' || request.path.includes('User')) {
-            //request.headers.authorization = `Basic ${request.session.userid}`;
-            request.headers.authorization = `Basic exampleUserId`;
+            request.headers.authorization = `Basic ${request.session.userid}`;
         } 
 
         next();

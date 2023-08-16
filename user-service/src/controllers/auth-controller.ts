@@ -49,8 +49,9 @@ export default class AuthController {
                 response.status(401).json({ 'error': 'unauthenticated' });
                 return;
             }
-    
-            response.status(200).json({ 'data': result.id });
+            
+            console.log('returing the userid ' + result._id);
+            response.status(200).json({ 'data': result._id });
         } catch (error) {
             next(error);
         }

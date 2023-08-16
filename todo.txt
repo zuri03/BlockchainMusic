@@ -22,6 +22,8 @@ future plans:
     create cli for interacting with the system
 
 todo:
+    fix rabbitmq versioning issue 
+    
     add versioning to npm packages and dockerfiles
     
     research audio file types and determine which type to use for applicaiton

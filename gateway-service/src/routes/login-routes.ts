@@ -42,9 +42,11 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
     }
 
     try {
-        const userid = await sendLoginRequest(username, password);
+        /*
+        //const userid = await sendLoginRequest(username, password);
         request.session.userid = userid;
         request.session.save();
+        */
         response.status(200).json({ 'data': 'success' });
     } catch (error) {
         next(error);

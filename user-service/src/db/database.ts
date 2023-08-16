@@ -8,7 +8,6 @@ export default class UserDatabase implements UserDB {
     private userCollection?: mongoDB.Collection<User>;
 
     async connectToDatabase() {
-
         let mongodbUserUsername: string | undefined = process.env.MONGO_USERNAME;
         let mongodbUserPassword: string | undefined = process.env.MONGO_PASSWORD;
     
