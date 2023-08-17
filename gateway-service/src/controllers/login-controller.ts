@@ -29,6 +29,7 @@ export default class LoginController {
         }
         
         if (!request.get('authorization')) {
+            console.log('CANNOT FIND AUTH HEADER')
             response.status(403).json({ 'error': 'missing auth credentials' });
             return;
         }
@@ -66,11 +67,8 @@ export default class LoginController {
             }
 
             const userid = loginResponseBody['data'];
-            console.log('got userid ' + userid);
             request.session.userid = userid;
-            console.log('set userid to ' + request.session.userid);
             request.session.save();
-            console.log('session id is now ' + request.session.userid);
             response.status(200).json({ 'data': 'success' });
         } catch (error) {
             next(error);

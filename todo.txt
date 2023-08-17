@@ -66,3 +66,5 @@ todo:
         look into session hijacking prevention techniques (research)
         add unit tests
         add support for CSRF tokens
+
+ 

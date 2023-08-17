@@ -2,10 +2,9 @@ import express, { Router, Request, Response, NextFunction, Application } from 'e
 import cors from 'cors';
 import session from 'express-session';
 import crypto from 'crypto';
-import { CustomErrorHandler, checkForUserid } from './middleware/middleware-functions';
+import { CustomErrorHandler } from './middleware/middleware-functions';
 import { APIServicesProxyMiddleware } from './middleware/proxy-functions';
 import LoginController from './controllers/login-controller';
-import sendLoginRequest from './auth';
 
 const initRouter = function (controller: LoginController): Router {
     const router = Router();
@@ -25,10 +24,9 @@ const initRouter = function (controller: LoginController): Router {
     return router;
 }
 
-export default async function configureApp() : Promise<Application> {
+export default async function configureApp(controller: LoginController) : Promise<Application> {
 
     const app : Application = express();
-    const controller = new LoginController(sendLoginRequest);
     const router = initRouter(controller);
 
     app.use(cors({
@@ -49,7 +47,8 @@ export default async function configureApp() : Promise<Application> {
     }));
 
     app.use((request, response, next) => {
-        console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: ${request.session.userid}`);
+        console.log(request.headers)
+        console.log(`INFO: ${request.method}: URL: ${request.url}, SessionId: ${request.sessionID}, userid: ${request.session.userid}, auth: ${request.get('authorization')}`);
         next();
     });
 

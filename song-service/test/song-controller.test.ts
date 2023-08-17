@@ -233,7 +233,6 @@ describe('Song routes write tests', () => {
         expect(author).toEqual(requestBody.author);
         expect(authorId).toEqual(requestBody.authorId);
         expect(description).toEqual(requestBody.description);
-        expect(spy).toBeCalled();
         expect(spy).toBeCalledWith(title, author, authorId, description);
     });
 
@@ -246,7 +245,6 @@ describe('Song routes write tests', () => {
             .set('Accept', 'application/json')
             .expect(200);
         
-        expect(spy).toBeCalled();
         expect(spy).toBeCalledWith('64c9a947fc13ae1440af11ed');
 
         const response = await request(app)
@@ -278,8 +276,6 @@ describe('Song routes write tests', () => {
             .set('Accept', 'application/json')
             .expect(200);
         
-        
-        expect(spy).toBeCalled();
         expect(spy).toBeCalledWith('64c9a947fc13ae1440af11ed', updatedSong.title, updatedSong.description);
 
         const response = await request(app)

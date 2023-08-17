@@ -1,4 +1,6 @@
 import configureApp from './src/app.js';
+import LoginController from './src/controllers/login-controller.js';
+import sendLoginRequest from './src/auth/index.js';
 
 (async function () {
 
@@ -6,7 +8,7 @@ import configureApp from './src/app.js';
         throw new Error("Key not defined in the environment");
     }
     
-    const app = await configureApp();
+    const app = await configureApp(new LoginController(sendLoginRequest));
 
     //temp port
     const PORT = 9090;
