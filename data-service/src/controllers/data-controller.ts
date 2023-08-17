@@ -30,22 +30,25 @@ export default class DataController {
             response.status(403).json({ 'error': 'values missing from auth header' });
             return;
         }
+        
+        //Check if the user requesting the song is the author themselves, if so skip the authorization process
+        if (authorid !== requestUserId) {
+            const cacheEntryValue = this.requestTokenCache.get(requestUserId);
+            if (!cacheEntryValue) {
+                response.status(403).json({ 'error': 'token not in cache' });
+                return;
+            }
 
-        const cacheEntryValue = this.requestTokenCache.get(requestUserId);
-        if (!cacheEntryValue) {
-            response.status(403).json({ 'error': 'token not in cache' });
-            return;
-        }
+            const resourceToken = request.get('resource-token');
+            if (!resourceToken) {
+                response.status(403).json({ 'error': 'missing required values' });
+                return;
+            }
 
-        const resourceToken = request.get('resource-token');
-        if (!resourceToken) {
-            response.status(403).json({ 'error': 'missing required values' });
-            return;
-        }
-
-        if (resourceToken !== cacheEntryValue) {
-            response.status(403).json({ 'error': 'tokens do not match' });
-            return;
+            if (resourceToken !== cacheEntryValue) {
+                response.status(403).json({ 'error': 'tokens do not match' });
+                return;
+            }
         }
 
         const songFilePath = path.join(this.songFilesRootPath, authorid, `${songid}`);
