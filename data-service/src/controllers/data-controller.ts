@@ -35,7 +35,7 @@ export default class DataController {
         if (authorid !== requestUserId) {
             const cacheEntryValue = this.requestTokenCache.get(requestUserId);
             if (!cacheEntryValue) {
-                response.status(403).json({ 'error': 'token not in cache' });
+                response.status(403).json({ 'error': 'token not in cache' });  
                 return;
             }
 

@@ -22,6 +22,8 @@ future plans:
     create cli for interacting with the system
 
 todo:
+    move routing to NGINX instance and only leave session management in Gateway service
+    
     fix rabbitmq versioning issue 
     
     add versioning to npm packages and dockerfiles
