@@ -1,8 +1,0 @@
-name: basic github action test
-run-name: basic print test is learning GitHub Actions
-on: [push]
-jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "TEST IS SUCCESSFUL"

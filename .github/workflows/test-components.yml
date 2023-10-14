@@ -1,0 +1,14 @@
+name: Build and test the components of the system
+run-name: Build and test the components of the system
+on: [push]
+jobs:
+  song-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+      - run: cd ./song-service
+      - run: npm install
+      - run: npm test     
+      
