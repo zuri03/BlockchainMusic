@@ -11,5 +11,5 @@ jobs:
           node-version: '17'
       - run: cd ./song-service
       - run: npm install
-      - run: npm run test
+      - run: npm --prefix ./song-service run test
       
