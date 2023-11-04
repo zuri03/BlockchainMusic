@@ -23,6 +23,8 @@ future plans:
 
 todo:
     move routing to NGINX instance and only leave session management in Gateway service
+
+    change user service to 3rd party auth provider
     
     fix rabbitmq versioning issue 
     
