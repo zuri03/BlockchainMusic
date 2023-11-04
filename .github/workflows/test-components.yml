@@ -8,8 +8,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - run: cd ./song-service
-      - run: npm install
+      - run: npm --prefix ./song-service install
       - run: npm --prefix ./song-service run test
       
