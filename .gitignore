@@ -40,6 +40,3 @@ example-cover*.png
 #jest
 jest.config.js
 coverage
-
-#test data
-testdata
